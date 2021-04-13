@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Device.Engine
+Bundle-SymbolicName: Device.Engine
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: device.engine.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Import-Package: devices.interfaces,
+ org.osgi.framework
+Automatic-Module-Name: Device.Engine

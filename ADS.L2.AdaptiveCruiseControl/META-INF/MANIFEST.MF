@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AdaptiveCruiseControl
+Bundle-SymbolicName: ADS.L2.AdaptiveCruiseControl
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ads.l2.adaptivecruisecontrol.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Import-Package: ADS.interfaces,
+ devices.interfaces,
+ org.osgi.framework;version="1.3.0"
+Automatic-Module-Name: ADS.L2.AdaptiveCruiseControl
