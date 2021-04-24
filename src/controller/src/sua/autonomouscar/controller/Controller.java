@@ -12,7 +12,7 @@ import sua.autonomouscar.controller.interfaces.IMonitor;
 public class Controller {
 	// The collection of monitors that collect the measurements from the probes.
 	private List<IMonitor> monitors;
-	
+
 	// The collection of adaption rules that will be executed.
 	private List<IAdaptionRule> rules;
 
@@ -26,7 +26,7 @@ public class Controller {
 		this.monitors = monitors;
 		this.rules = rules;
 	}
-	
+
 	/**
 	 * Executes an iteration of the control loop.
 	 */
@@ -35,7 +35,7 @@ public class Controller {
 		// Execute the monitorize function for every monitor.
 		monitors.stream()
 			.forEach(m -> m.monitorize());
-		
+
 		// Execute those rules whose condition evaluate to true.
 		rules.stream()
 			.filter(r -> r.evaluateCondition())
