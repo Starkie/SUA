@@ -7,12 +7,12 @@ import sua.autonomouscar.controller.interfaces.IAdaptionRule;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.DrivingServiceUtils;
+import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.devices.interfaces.IDistanceSensor;
+import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL1_AssistedDriving;
-import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
-import sua.autonomouscar.interfaces.IIdentifiable;
 
 public class SwitchToL1AssistedDrivingFromL0Rule implements IAdaptionRule {
 	
@@ -22,6 +22,9 @@ public class SwitchToL1AssistedDrivingFromL0Rule implements IAdaptionRule {
 		this.context = context;
 	}
 
+	/**
+	 * The condition to execute the rule: currentDrivingService instanceof IL0_DrivingService && is-front-distance-sensor-available && are-line-sensors-available
+	 */
 	@Override
 	public void evaluateAndExecute() {
 		IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
@@ -36,8 +39,13 @@ public class SwitchToL1AssistedDrivingFromL0Rule implements IAdaptionRule {
 		
 		IDistanceSensor distanceSensor = AutonomousVehicleContextUtils.findDistanceSensor(context, DistanceSensorPositon.FRONT);
 		
+		ILineSensor leftLineSensor = AutonomousVehicleContextUtils.findLineSensor(context, LineSensorPosition.LEFT);
+		ILineSensor rightLineSensor = AutonomousVehicleContextUtils.findLineSensor(context, LineSensorPosition.RIGHT);
+		
 		if (l1DrivingService == null 
-			|| distanceSensor == null)
+			|| distanceSensor == null
+			|| leftLineSensor == null
+			|| rightLineSensor == null)
 		{
 			return;
 		}
@@ -45,6 +53,8 @@ public class SwitchToL1AssistedDrivingFromL0Rule implements IAdaptionRule {
 		System.out.println("[ Controller ] Executing the " + this.getClass().getSimpleName() + " rule.");
 		
 		l1DrivingService.setFrontDistanceSensor(((Thing)distanceSensor).getId());
+		l1DrivingService.setLeftLineSensor(((Thing)leftLineSensor).getId());
+		l1DrivingService.setRightLineSensor(((Thing)rightLineSensor).getId());
 		
 		currentDrivingService.stopDriving();
 		l1DrivingService.startDriving();
