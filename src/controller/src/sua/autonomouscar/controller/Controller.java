@@ -1,5 +1,6 @@
 package sua.autonomouscar.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sua.autonomouscar.controller.interfaces.IAdaptionRule;
@@ -24,7 +25,18 @@ public class Controller {
 	public Controller(List<IMonitor> monitors, List<IAdaptionRule> rules)
 	{
 		this.monitors = monitors;
+		
+		if (this.monitors == null)
+		{
+			this.monitors = new ArrayList<>();
+		}
+		
 		this.rules = rules;
+		
+		if (this.rules == null)
+		{
+			this.rules = new ArrayList<>();
+		}
 	}
 
 	/**
@@ -40,5 +52,15 @@ public class Controller {
 		rules.stream()
 			.filter(r -> r.evaluateCondition())
 			.forEach(r -> r.execute());
+	}
+	
+	public void addMonitor(IMonitor monitor)
+	{
+		this.monitors.add(monitor);
+	}
+	
+	public void addAdaptionRule(IAdaptionRule rule)
+	{
+		this.rules.add(rule);
 	}
 }
