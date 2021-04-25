@@ -11,9 +11,14 @@ import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
+import sua.autonomouscar.driving.interfaces.IL0_DrivingService;
 import sua.autonomouscar.driving.interfaces.IL1_AssistedDriving;
+import sua.autonomouscar.driving.interfaces.IL1_DrivingService;
 import sua.autonomouscar.infrastructure.Thing;
 
+/**
+ * Rule to switch from an active {@link IL0_DrivingService} to a {@link IL1_DrivingService} if all the required sensors are available.
+ */
 public class SwitchToL1AssistedDrivingFromL0Rule implements IAdaptionRule {
 	
 	private BundleContext context;
