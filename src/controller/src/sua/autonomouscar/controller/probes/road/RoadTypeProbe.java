@@ -11,7 +11,7 @@ import sua.autonomouscar.devices.interfaces.IRoadSensor;
  */
 public class RoadTypeProbe extends RoadContextProbe implements IProbe<ERoadType> {
 
-	protected RoadTypeProbe(BundleContext context) {
+	public RoadTypeProbe(BundleContext context) {
 		super(context);
 	}
 
