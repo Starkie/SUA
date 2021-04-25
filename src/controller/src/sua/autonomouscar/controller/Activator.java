@@ -9,6 +9,9 @@ import org.osgi.framework.ServiceRegistration;
 
 import sua.autonomouscar.controller.interfaces.IAdaptionRule;
 import sua.autonomouscar.controller.interfaces.IMonitor;
+import sua.autonomouscar.controller.monitors.road.RoadContextMonitor;
+import sua.autonomouscar.controller.probes.road.RoadStatusProbe;
+import sua.autonomouscar.controller.probes.road.RoadTypeProbe;
 import sua.autonomouscar.simulation.interfaces.ISimulationElement;
 
 public class Activator implements BundleActivator {
@@ -24,12 +27,9 @@ public class Activator implements BundleActivator {
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-
-		List<IMonitor> monitors = new ArrayList<IMonitor>();
-		List<IAdaptionRule> rules = new ArrayList<IAdaptionRule>();
-
+		
 		// Register the simulation controller, that will execute a loop iteration on each step.
-		this.controller = new SimulationContoller(monitors, rules);
+		this.controller = new SimulationContoller(null, null);
 
 		this.serviceReference = bundleContext.registerService(
 				new String[] {ISimulationElement.class.getName(), Controller.class.getName()},
@@ -39,6 +39,7 @@ public class Activator implements BundleActivator {
 
 	public void stop(BundleContext bundleContext) throws Exception {
 		this.serviceReference.unregister();
+		this.controller = null;
 		Activator.context = null;
 	}
 }

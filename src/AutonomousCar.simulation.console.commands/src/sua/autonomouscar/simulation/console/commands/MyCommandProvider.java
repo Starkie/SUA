@@ -177,6 +177,7 @@ public class MyCommandProvider {
 		EmergencyFallbackPlanConfigurator.configure(context);
 		ParkInTheRoadShoulderFallbackPlanConfigurator.configure(context);
 		NotificationServiceConfigurator.configure(context);
+		SimulationContollerConfigurator.configure(context);
 	}
 	
 	public void driver(String property, String s) {
