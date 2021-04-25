@@ -33,11 +33,17 @@ public class RoadContext {
 	}
 
 	public void setType(ERoadType type) {
-		this.properties.put(TYPE, type);
+		if (type!= null)
+		{
+			this.properties.put(TYPE, type);
+		}
 	}
 
 	public void setStatus(ERoadStatus status) {
-		this.properties.put(STATUS, status);
+		if (status != null)
+		{
+			this.properties.put(STATUS, status);
+		}
 	}
 
 	public Dictionary<String, Object> getProperties() {
