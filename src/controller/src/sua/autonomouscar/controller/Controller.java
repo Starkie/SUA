@@ -50,8 +50,7 @@ public class Controller {
 
 		// Execute those rules whose condition evaluate to true.
 		rules.stream()
-			.filter(r -> r.evaluateCondition())
-			.forEach(r -> r.execute());
+			.forEach(r -> r.evaluateAndExecute());
 	}
 	
 	public void addMonitor(IMonitor monitor)
