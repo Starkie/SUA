@@ -11,12 +11,12 @@ import sua.autonomouscar.infrastructure.Thing;
 import sua.autonomouscar.interaction.interfaces.INotificationService;
 
 /**
- * Associates the {@link INotificationService} to the {@link IL1_DrivingService} if it is available. 
+ * Disables the {@link INotificationService} from the {@link IL1_DrivingService} when it stops being available. 
  */
-public class EnableNotificationsInL1Rule implements IAdaptionRule {
+public class DisableNotificationsInL1Rule implements IAdaptionRule {
 	private BundleContext context;
 
-	public EnableNotificationsInL1Rule(BundleContext context) {
+	public DisableNotificationsInL1Rule(BundleContext context) {
 		this.context = context;
 	}
 
@@ -33,13 +33,13 @@ public class EnableNotificationsInL1Rule implements IAdaptionRule {
 
 		INotificationService notificationService = OSGiUtils.getService(context, INotificationService.class);
 
-		if (notificationService == null)
+		if (notificationService != null)
 		{
 			return;
 		}
 
 		System.out.println("[ Controller ] Executing the " + this.getClass().getSimpleName() + " rule.");
 
-		l1DrivingService.setNotificationService(((Thing)notificationService).getId());
+		l1DrivingService.setNotificationService(null);
 	}
 }

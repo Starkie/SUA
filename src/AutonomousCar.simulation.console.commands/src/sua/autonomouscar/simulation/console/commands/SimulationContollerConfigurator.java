@@ -8,6 +8,7 @@ import sua.autonomouscar.controller.listeners.NotificationServiceServiceListener
 import sua.autonomouscar.controller.monitors.road.RoadContextMonitor;
 import sua.autonomouscar.controller.probes.road.RoadStatusProbe;
 import sua.autonomouscar.controller.probes.road.RoadTypeProbe;
+import sua.autonomouscar.controller.rules.DisableNotificationsInL1Rule;
 import sua.autonomouscar.controller.rules.EnableNotificationsInL1Rule;
 import sua.autonomouscar.controller.rules.SwitchToL0ManualDrivingAssistedDrivingFromL1;
 import sua.autonomouscar.controller.rules.SwitchToL1AssistedDrivingFromL0Rule;
@@ -34,5 +35,6 @@ public class SimulationContollerConfigurator {
         // Register adaption rules that depend on certain event listeners.
 		NotificationServiceServiceListener notificationServiceListener = OSGiUtils.getService(context, NotificationServiceServiceListener.class);
 		notificationServiceListener.setNotificationServiceEnabled(new EnableNotificationsInL1Rule(context));
+		notificationServiceListener.setNotificationServiceEnabled(new DisableNotificationsInL1Rule(context));
 	}
 }
