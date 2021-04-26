@@ -12,6 +12,7 @@ import sua.autonomouscar.controller.rules.DisableNotificationsInL1Rule;
 import sua.autonomouscar.controller.rules.EnableNotificationsInL1Rule;
 import sua.autonomouscar.controller.rules.SwitchToL0ManualDrivingAssistedDrivingFromL1;
 import sua.autonomouscar.controller.rules.SwitchToL1AssistedDrivingFromL0Rule;
+import sua.autonomouscar.controller.rules.SwitchToL2LaneKeepingAssistFromL1;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
 public class SimulationContollerConfigurator {
@@ -31,6 +32,7 @@ public class SimulationContollerConfigurator {
 		// Adaption rules.
 		controller.addAdaptionRule(new SwitchToL1AssistedDrivingFromL0Rule(context));
 		controller.addAdaptionRule(new SwitchToL0ManualDrivingAssistedDrivingFromL1(context));
+		controller.addAdaptionRule(new SwitchToL2LaneKeepingAssistFromL1(context));
 
         // Register adaption rules that depend on certain event listeners.
 		NotificationServiceServiceListener notificationServiceListener = OSGiUtils.getService(context, NotificationServiceServiceListener.class);
