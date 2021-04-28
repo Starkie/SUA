@@ -31,6 +31,7 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
         CurrentDrivingServiceStatus currentDrivingServiceStatus = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
         RoadContext roadContext = OSGiUtils.getService(context, RoadContext.class);
 
+        // TODO: Create healthcheckproperties for the IDistanceSensor and engine.
         if (currentDrivingServiceStatus.getAutonomyLevel() != DrivingAutonomyLevel.L1
             || roadContext.getType() != ERoadType.HIGHWAY) {
             return;
@@ -38,7 +39,7 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
 
         System.out.println("[ Controller ] Executing the " + this.getClass().getSimpleName() + " rule.");
         
-        IDrivingService currentDrivingService = OSGiUtils.getService(context, IDrivingService.class);
+        IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
         
         ServiceReference<IL2_AdaptiveCruiseControl> l2DrivingServiceReference = context.getServiceReference(IL2_AdaptiveCruiseControl.class);
         IL2_AdaptiveCruiseControl l2DrivingService = context.getService(l2DrivingServiceReference);
@@ -53,11 +54,10 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
 
         l2DrivingService.setEngine(((Thing) engine).getId());
         l2DrivingService.setFrontDistanceSensor(((Thing) distanceSensor).getId());
-
         l2DrivingService.setLateralSecurityDistance(LATERAL_SECURITY_DISTANCE);
 
-        // TODO: Eliminar el servicio de conducción autonoma actual. O deregistrarlo.
-        currentDrivingService.stopDriving();
+        // Unregister the current driving service and replace it with the L2_AdaptiveCruiseControl.
+        ((Thing)currentDrivingService).unregisterThing();
         l2DrivingService.startDriving();
     }
 }
