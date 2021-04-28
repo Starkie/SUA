@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rules
+Bundle-SymbolicName: controller.rules
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sua.autonomouscar.controller.rules.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Import-Package: org.osgi.framework;version="1.3.0"
+Automatic-Module-Name: controller.rules
+Require-Bundle: AutonomousCar.interfaces,
+ controller,
+ AutonomousCar.infrastructure
