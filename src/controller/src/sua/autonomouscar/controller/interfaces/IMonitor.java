@@ -1,13 +1,16 @@
 package sua.autonomouscar.controller.interfaces;
 
 /**
- * Monitors the measurements obtained from one ore more {@link IProbe} of the system and 
- * updates the adaption properties if necessary.
+ * Indicates that the component monitors the changes on properties of the type
+ * {@link T}.
  */
-public interface IMonitor {
-	/**
-	 *  Monitors the measurements obtained from one ore more {@link IProbe} of the system and 
-	 * updates the adaption properties if necessary.
-	 */
-	void monitorize();
+public interface IMonitor<T> {
+
+    /**
+     * Method to be called to register the value from the probe. If it is relevant,
+     * it might update the value of a knowledge property.
+     * 
+     * @param value
+     */
+    void registerChange(T value);
 }

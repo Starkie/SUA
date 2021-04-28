@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Monitors
+Bundle-SymbolicName: controller.monitors
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sua.autonomouscar.controller.monitors.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Import-Package: org.osgi.framework;version="1.3.0"
+Automatic-Module-Name: controller.monitors
+Export-Package: sua.autonomouscar.controller.monitors
+Require-Bundle: controller,
+ AutonomousCar.infrastructure,
+ AutonomousCar.interfaces
