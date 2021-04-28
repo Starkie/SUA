@@ -3,6 +3,7 @@ package sua.autonomouscar.controller.rules;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import sua.autonomouscar.controller.properties.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.RoadContext;
 
 public class Activator implements BundleActivator {
@@ -24,7 +25,10 @@ public class Activator implements BundleActivator {
 
         // Register the rule listeners to the properties it depends on.
         String roadContextKnowledgePropertyListenerFilter= "(objectclass=" + RoadContext.class.getName() + ")";
-        context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, roadContextKnowledgePropertyListenerFilter);		
+        context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, roadContextKnowledgePropertyListenerFilter);
+        
+        String currentDrivingServiceKnowledgePropertyListenerFilter= "(objectclass=" + CurrentDrivingServiceStatus.class.getName() + ")";
+        context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, currentDrivingServiceKnowledgePropertyListenerFilter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
