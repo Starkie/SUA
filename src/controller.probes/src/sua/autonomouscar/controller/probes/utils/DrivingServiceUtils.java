@@ -1,4 +1,4 @@
-package sua.autonomouscar.controller.utils;
+package sua.autonomouscar.controller.probes.utils;
 
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL0_DrivingService;

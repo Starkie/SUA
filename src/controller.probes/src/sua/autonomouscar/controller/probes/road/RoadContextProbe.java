@@ -38,7 +38,7 @@ public class RoadContextProbe implements IProbe<IRoadSensor>, ServiceListener {
         switch (event.getType()) {
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
-            registerMeasurement(OSGiUtils.getService(context, IRoadSensor.class));
+            this.registerMeasurement(OSGiUtils.getService(context, IRoadSensor.class));
 
             break;
         default:
