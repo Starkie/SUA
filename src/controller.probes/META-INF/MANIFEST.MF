@@ -7,7 +7,8 @@ Bundle-Activator: sua.autonomouscar.controller.probes.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: org.osgi.framework;version="1.3.0"
 Automatic-Module-Name: controller.probes
-Export-Package: sua.autonomouscar.controller.probes.road
+Export-Package: sua.autonomouscar.controller.probes.road,
+ sua.autonomouscar.controller.probes.utils
 Require-Bundle: AutonomousCar.interfaces,
  AutonomousCar.infrastructure,
  controller,

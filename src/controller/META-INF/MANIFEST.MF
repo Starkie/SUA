@@ -11,6 +11,7 @@ Require-Bundle: AutonomousCar.interfaces,
  AutonomousCar.infrastructure
 Export-Package: sua.autonomouscar.controller,
  sua.autonomouscar.controller.interfaces,
- sua.autonomouscar.controller.monitors.road,
- sua.autonomouscar.controller.probes.road,
- sua.autonomouscar.controller.rules
+ sua.autonomouscar.controller.listeners,
+ sua.autonomouscar.controller.properties,
+ sua.autonomouscar.controller.rules,
+ sua.autonomouscar.controller.utils
