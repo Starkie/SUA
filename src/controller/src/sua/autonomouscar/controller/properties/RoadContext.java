@@ -18,14 +18,13 @@ public class RoadContext extends KnowledgeBase {
      * the property.
      * 
      * @param context The context to register the property.
-     * @param status  The initial road status.
-     * @param type    The initial road type.
      */
-    public RoadContext(BundleContext context, ERoadStatus status, ERoadType type) {
+    public RoadContext(BundleContext context) {
         super(context);
-
-        this.setStatus(status);
-        this.setType(type);
+        
+        this.addImplementedInterface(RoadContext.class.getName());
+        
+        this.registerKnowledge();
     }
 
     public ERoadType getType() {

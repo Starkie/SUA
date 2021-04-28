@@ -1,7 +1,9 @@
 package sua.autonomouscar.controller.properties;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -15,9 +17,11 @@ import sua.autonomouscar.controller.interfaces.IKnowledge;
 public abstract class KnowledgeBase implements IKnowledge {
 
     private final BundleContext context;
+    private ServiceRegistration<?> serviceRegistration;
 
+    private List<String> implementedInterfaces;
     protected final Dictionary<String, Object> properties;
-    private final ServiceRegistration<?> serviceRegistration;
+
 
     /**
      * Creates a new instance of the class {@link RoadContext}. It also registers
@@ -31,9 +35,14 @@ public abstract class KnowledgeBase implements IKnowledge {
         this.context = context;
 
         this.properties = new Hashtable<>();
+        
+        this.implementedInterfaces = new ArrayList<String>();
+        this.implementedInterfaces.add(KnowledgeBase.class.getName());
+        this.implementedInterfaces.add(IKnowledge.class.getName());
+    }
 
-        String[] implementedInterfaces = new String[] { RoadContext.class.getName(), IKnowledge.class.getName() };
-        this.serviceRegistration = this.context.registerService(implementedInterfaces, this, this.properties);
+    protected void registerKnowledge() {
+        this.serviceRegistration = this.context.registerService(implementedInterfaces.toArray(new String[0]), this, this.properties);
     }
 
     /**
@@ -46,6 +55,10 @@ public abstract class KnowledgeBase implements IKnowledge {
     protected void updateProperty(String propertyName, Object value) {
         this.properties.put(propertyName, value);
         this.serviceRegistration.setProperties(properties);
+    }
+    
+    public void addImplementedInterface(String interfaceName) {
+        this.implementedInterfaces.add(interfaceName);
     }
 
 }
