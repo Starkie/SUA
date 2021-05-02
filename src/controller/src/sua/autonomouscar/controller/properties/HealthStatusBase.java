@@ -18,7 +18,14 @@ public abstract class HealthStatusBase extends KnowledgeBase {
      * @return True if it is available. Otherwise, returns false.
      */
     public boolean isAvailable() {
-        return (boolean) this.properties.get(IS_AVAILABLE);
+        try 
+        {
+            return (boolean) this.properties.get(IS_AVAILABLE);            
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 
     /**
