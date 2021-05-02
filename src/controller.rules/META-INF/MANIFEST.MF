@@ -10,4 +10,5 @@ Automatic-Module-Name: controller.rules
 Require-Bundle: AutonomousCar.interfaces,
  controller,
  AutonomousCar.infrastructure,
- driving.L2.AdaptiveCruiseControl
+ driving.L2.AdaptiveCruiseControl,
+ controller.properties
