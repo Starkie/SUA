@@ -41,8 +41,10 @@ public abstract class KnowledgeBase implements IKnowledge {
         this.implementedInterfaces.add(IKnowledge.class.getName());
     }
 
-    protected void registerKnowledge() {
+    public ServiceRegistration<?> registerKnowledge() {
         this.serviceRegistration = this.context.registerService(implementedInterfaces.toArray(new String[0]), this, this.properties);
+        
+        return this.serviceRegistration;
     }
 
     /**
@@ -57,8 +59,7 @@ public abstract class KnowledgeBase implements IKnowledge {
         this.serviceRegistration.setProperties(properties);
     }
     
-    public void addImplementedInterface(String interfaceName) {
+    protected void addImplementedInterface(String interfaceName) {
         this.implementedInterfaces.add(interfaceName);
     }
-
 }

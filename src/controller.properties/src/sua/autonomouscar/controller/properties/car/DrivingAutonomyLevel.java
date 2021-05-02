@@ -1,4 +1,4 @@
-package sua.autonomouscar.controller.properties;
+package sua.autonomouscar.controller.properties.car;
 
 public enum DrivingAutonomyLevel
 {

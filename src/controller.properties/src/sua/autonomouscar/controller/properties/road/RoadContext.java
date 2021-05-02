@@ -1,7 +1,8 @@
-package sua.autonomouscar.controller.properties;
+package sua.autonomouscar.controller.properties.road;
 
 import org.osgi.framework.BundleContext;
 
+import sua.autonomouscar.controller.properties.KnowledgeBase;
 import sua.autonomouscar.interfaces.ERoadStatus;
 import sua.autonomouscar.interfaces.ERoadType;
 
@@ -23,8 +24,6 @@ public class RoadContext extends KnowledgeBase {
         super(context);
         
         this.addImplementedInterface(RoadContext.class.getName());
-        
-        this.registerKnowledge();
     }
 
     public ERoadType getType() {

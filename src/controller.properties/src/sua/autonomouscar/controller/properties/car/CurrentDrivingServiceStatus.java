@@ -1,6 +1,8 @@
-package sua.autonomouscar.controller.properties;
+package sua.autonomouscar.controller.properties.car;
 
 import org.osgi.framework.BundleContext;
+
+import sua.autonomouscar.controller.properties.KnowledgeBase;
 
 public class CurrentDrivingServiceStatus extends KnowledgeBase {
     private static final String AUTONOMY_LEVEL = "autonomyLevel";
@@ -9,8 +11,6 @@ public class CurrentDrivingServiceStatus extends KnowledgeBase {
         super(context);
         
         this.addImplementedInterface(CurrentDrivingServiceStatus.class.getName());
-        
-        this.registerKnowledge();
     }
     
     public DrivingAutonomyLevel getAutonomyLevel() {
