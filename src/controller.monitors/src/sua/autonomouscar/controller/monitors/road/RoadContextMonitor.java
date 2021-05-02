@@ -1,8 +1,8 @@
-package sua.autonomouscar.controller.monitors;
+package sua.autonomouscar.controller.monitors.road;
 
 import org.osgi.framework.BundleContext;
 
-import sua.autonomouscar.controller.properties.RoadContext;
+import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.interfaces.ERoadStatus;
 import sua.autonomouscar.interfaces.ERoadType;

@@ -1,4 +1,4 @@
-package sua.autonomouscar.controller.monitors;
+package sua.autonomouscar.controller.monitors.road;
 
 import sua.autonomouscar.interfaces.ERoadStatus;
 import sua.autonomouscar.interfaces.ERoadType;

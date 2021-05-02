@@ -4,6 +4,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
+import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.road.RoadContextProbe;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
 import sua.autonomouscar.driving.interfaces.IDrivingService;

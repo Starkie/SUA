@@ -4,6 +4,10 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
+import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
+import sua.autonomouscar.controller.monitors.road.IRoadContextMonitor;
+import sua.autonomouscar.controller.monitors.road.RoadContextMonitor;
+
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;

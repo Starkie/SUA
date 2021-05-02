@@ -5,7 +5,7 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
-import sua.autonomouscar.controller.monitors.IRoadContextMonitor;
+import sua.autonomouscar.controller.monitors.road.IRoadContextMonitor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.interfaces.ERoadStatus;

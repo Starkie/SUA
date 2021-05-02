@@ -12,4 +12,5 @@ Export-Package: sua.autonomouscar.controller.probes.road,
 Require-Bundle: AutonomousCar.interfaces,
  AutonomousCar.infrastructure,
  controller,
- controller.monitors
+ controller.monitors,
+ controller.properties

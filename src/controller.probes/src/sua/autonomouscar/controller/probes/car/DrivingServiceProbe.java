@@ -1,13 +1,13 @@
-package sua.autonomouscar.controller.probes;
+package sua.autonomouscar.controller.probes.car;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
-import sua.autonomouscar.controller.monitors.DrivingServiceMonitor;
+import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
 import sua.autonomouscar.controller.probes.utils.DrivingServiceUtils;
-import sua.autonomouscar.controller.properties.DrivingAutonomyLevel;
+import sua.autonomouscar.controller.properties.car.DrivingAutonomyLevel;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.infrastructure.OSGiUtils;

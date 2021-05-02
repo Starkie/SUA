@@ -3,9 +3,9 @@ package sua.autonomouscar.controller.rules;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import sua.autonomouscar.controller.properties.CurrentDrivingServiceStatus;
-import sua.autonomouscar.controller.properties.DrivingAutonomyLevel;
-import sua.autonomouscar.controller.properties.RoadContext;
+import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
+import sua.autonomouscar.controller.properties.car.DrivingAutonomyLevel;
+import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.devices.interfaces.IDistanceSensor;
