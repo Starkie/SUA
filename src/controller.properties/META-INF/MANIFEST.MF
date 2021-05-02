@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Properties
 Bundle-SymbolicName: controller.properties
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: controller.knoledge.Activator
+Bundle-Activator: controller.properties.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: org.osgi.framework;version="1.3.0"
 Automatic-Module-Name: controller.knoledge
