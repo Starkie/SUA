@@ -2,17 +2,19 @@ package sua.autonomouscar.controller.monitors.car;
 
 import org.osgi.framework.BundleContext;
 
+import sua.autonomouscar.controller.interfaces.IHealthMonitor;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
-public class EngineHealthMonitor{
-
+public class EngineHealthMonitor implements IHealthMonitor
+{
     private BundleContext context;
 
     public EngineHealthMonitor(BundleContext context) {
         this.context = context;
     }
 
+    @Override
     public void registerHealthCheck(boolean isEngineAvailable) {
         EngineHealthStatus engineHealthStatus = OSGiUtils.getService(context, EngineHealthStatus.class);
         
