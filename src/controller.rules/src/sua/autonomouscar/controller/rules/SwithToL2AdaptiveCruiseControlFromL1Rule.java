@@ -12,6 +12,7 @@ import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.devices.interfaces.IEngine;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL2_AdaptiveCruiseControl;
+import sua.autonomouscar.driving.l2.acc.L2_AdaptiveCruiseControl;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
 import sua.autonomouscar.interfaces.ERoadType;
@@ -45,8 +46,7 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
         IL2_AdaptiveCruiseControl l2DrivingService = context.getService(l2DrivingServiceReference);
 
         if (l2DrivingService == null) {
-            // TODO: Si el servicio es nulo, instanciarlo.
-            return;
+            l2DrivingService = initializeL2AdaptiveCruiseControl(); 
         }
         
         IDistanceSensor distanceSensor = AutonomousVehicleContextUtils.findDistanceSensor(context, DistanceSensorPositon.FRONT);
@@ -59,5 +59,12 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
         // Unregister the current driving service and replace it with the L2_AdaptiveCruiseControl.
         ((Thing)currentDrivingService).unregisterThing();
         l2DrivingService.startDriving();
+    }
+
+    private IL2_AdaptiveCruiseControl initializeL2AdaptiveCruiseControl() {
+        L2_AdaptiveCruiseControl adaptiveCruiseControl = new L2_AdaptiveCruiseControl(context, "L2_AdaptiveCruiseControl");        
+        adaptiveCruiseControl.registerThing();
+        
+        return adaptiveCruiseControl;
     }
 }
