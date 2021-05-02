@@ -11,6 +11,8 @@ public abstract class HealthStatusBase extends KnowledgeBase {
 
     protected HealthStatusBase(BundleContext context) {
         super(context);
+        
+        this.addImplementedInterface(HealthStatusBase.class.getName());
     }
     
     /**
