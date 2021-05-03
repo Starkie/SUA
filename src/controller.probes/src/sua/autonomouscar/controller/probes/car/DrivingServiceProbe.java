@@ -7,8 +7,8 @@ import org.osgi.framework.ServiceListener;
 import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
 import sua.autonomouscar.controller.probes.utils.DrivingServiceUtils;
-import sua.autonomouscar.controller.properties.car.DrivingAutonomyLevel;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
+import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
@@ -22,15 +22,15 @@ public class DrivingServiceProbe implements IProbe<IDrivingService>, ServiceList
     @Override
     public void registerMeasurement(IDrivingService drivingService) {
         DrivingServiceMonitor drivingServiceMonitor = OSGiUtils.getService(context, DrivingServiceMonitor.class);
-        
+
         if (drivingService != null && drivingService.isDriving())
         {
             DrivingAutonomyLevel autonomyLevel = GetAutonomyLevel(drivingService);
-            
+
             drivingServiceMonitor.registerAutonomyLevelChange(autonomyLevel);
         }
     }
-    
+
 
     @Override
     public void serviceChanged(ServiceEvent event) {
@@ -38,7 +38,7 @@ public class DrivingServiceProbe implements IProbe<IDrivingService>, ServiceList
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
             IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
-            
+
             this.registerMeasurement(currentDrivingService);
 
             break;
@@ -46,11 +46,11 @@ public class DrivingServiceProbe implements IProbe<IDrivingService>, ServiceList
             break;
         }
     }
-    
+
     private DrivingAutonomyLevel GetAutonomyLevel(IDrivingService drivingService) {
         if (DrivingServiceUtils.isL0DrivingService(drivingService))
         {
-            return DrivingAutonomyLevel.L0; 
+            return DrivingAutonomyLevel.L0;
         }
         else if (DrivingServiceUtils.isL1DrivingService(drivingService))
         {
@@ -64,7 +64,7 @@ public class DrivingServiceProbe implements IProbe<IDrivingService>, ServiceList
         {
             return DrivingAutonomyLevel.L3;
         }
-        
+
         return null;
     }
 }

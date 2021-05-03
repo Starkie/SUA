@@ -3,7 +3,7 @@ package sua.autonomouscar.controller.monitors.car;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
-import sua.autonomouscar.controller.properties.car.DrivingAutonomyLevel;
+import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
 public class DrivingServiceMonitor {

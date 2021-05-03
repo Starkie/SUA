@@ -3,6 +3,7 @@ package sua.autonomouscar.controller.properties.car;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.properties.KnowledgeBase;
+import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 
 public class CurrentDrivingServiceStatus extends KnowledgeBase {
     private static final String AUTONOMY_LEVEL = "autonomyLevel";

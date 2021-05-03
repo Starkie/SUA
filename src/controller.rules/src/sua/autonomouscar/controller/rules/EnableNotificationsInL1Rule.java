@@ -3,9 +3,9 @@ package sua.autonomouscar.controller.rules;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
-import sua.autonomouscar.controller.properties.car.DrivingAutonomyLevel;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
+import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.driving.interfaces.IL1_DrivingService;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
