@@ -18,8 +18,8 @@ public enum DistanceSensorPositon {
 	private final String lidarSensorId;
 	
 	private DistanceSensorPositon(String normalSensorId, String lidarSensorId) {
-		this.normalSensorId = lidarSensorId;
-		this.lidarSensorId = normalSensorId;
+		this.normalSensorId = normalSensorId;
+		this.lidarSensorId = lidarSensorId;
 	}
 
 	public String getNormalSensorId() {
