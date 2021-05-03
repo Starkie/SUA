@@ -5,6 +5,7 @@ import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
+import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 
@@ -17,6 +18,7 @@ public class Activator implements BundleActivator {
 	}
 
 	private EnableNotificationsInL1Rule enableNotificationsInL1Rule;
+	private SwitchToL1AssistedDrivingFromL0Rule switchToL1AssistedDrivingFromL0Rule;
     private SwithToL2AdaptiveCruiseControlFromL1Rule swithToL2AdaptiveCruiseControlFromL1Rule;
 
 	public void start(BundleContext bundleContext) throws Exception {
@@ -25,17 +27,26 @@ public class Activator implements BundleActivator {
 		this.enableNotificationsInL1Rule = new EnableNotificationsInL1Rule(bundleContext);
 		String enableNotificationSystemInL1ServiceFilter = createFilter(CurrentDrivingServiceStatus.class, NotificationServiceHealthStatus.class);
 		context.addServiceListener(enableNotificationsInL1Rule, enableNotificationSystemInL1ServiceFilter);
+		
+		// TODO: ADD FILTERS FOR DISTANCE SENSORS.
+		this.switchToL1AssistedDrivingFromL0Rule = new SwitchToL1AssistedDrivingFromL0Rule(context);
+        String swithToL1AccFromL0Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class);
+        context.addServiceListener(this.switchToL1AssistedDrivingFromL0Rule, swithToL1AccFromL0Filter);
 
+        // TODO: ADD FILTERS FOR DISTANCE SENSORS.
         this.swithToL2AdaptiveCruiseControlFromL1Rule = new SwithToL2AdaptiveCruiseControlFromL1Rule(context);
-        String sithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class);
-        context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, sithToL2AccFromL1Filter);
+        String swithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class);
+        context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, swithToL2AccFromL1Filter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
-	    context.removeServiceListener(enableNotificationsInL1Rule);
+	    context.removeServiceListener(this.enableNotificationsInL1Rule);
 	    this.enableNotificationsInL1Rule = null;
+	    
+	    context.removeServiceListener(this.switchToL1AssistedDrivingFromL0Rule);
+        this.switchToL1AssistedDrivingFromL0Rule = null;
 
-	    context.removeServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule);
+	    context.removeServiceListener(this.swithToL2AdaptiveCruiseControlFromL1Rule);
 	    this.swithToL2AdaptiveCruiseControlFromL1Rule = null;
 
 		Activator.context = null;
