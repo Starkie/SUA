@@ -6,9 +6,12 @@ import org.osgi.framework.BundleContext;
 import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.car.EngineHealthCheckProbe;
+import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
 import sua.autonomouscar.controller.probes.road.RoadContextProbe;
+import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.devices.interfaces.IEngine;
+import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.interaction.interfaces.INotificationService;
@@ -24,6 +27,8 @@ public class Activator implements BundleActivator {
     private RoadContextProbe roadContextProbe;
     private DrivingServiceProbe drivingServiceProbe;
     private EngineHealthCheckProbe engineHealthCheckProbe;
+    private LineSensorHealthCheckProbe leftLineSensorHealthCheckProbe;
+    private LineSensorHealthCheckProbe rightLineSensorHealthCheckProbe;
     private NotificationServiceHealthCheckProbe notificationServiceHealthCheckProbe;
 
     public void start(BundleContext bundleContext) throws Exception {
@@ -49,6 +54,26 @@ public class Activator implements BundleActivator {
 
         String engineHealthCheckProbeListenerFilter = "(objectclass=" + IEngine.class.getName() + ")";
         context.addServiceListener(this.engineHealthCheckProbe, engineHealthCheckProbeListenerFilter);
+        
+        // Add the Left Line Sensor Health Check probe.
+        this.leftLineSensorHealthCheckProbe = new LineSensorHealthCheckProbe(context, LineSensorPosition.LEFT);
+        context.registerService(
+                new String[] { LineSensorHealthCheckProbe.class.getName(), IProbe.class.getName() },
+                this.leftLineSensorHealthCheckProbe,
+                null);
+
+        String leftLineSensorProbeListenerFilter = "(&(objectclass=" + ILineSensor.class.getName() + ")(id=" + LineSensorPosition.LEFT.getSensorId() + "))";
+        context.addServiceListener(this.leftLineSensorHealthCheckProbe, leftLineSensorProbeListenerFilter);
+        
+        // Add the Left Line Sensor Health Check probe.
+        this.rightLineSensorHealthCheckProbe = new LineSensorHealthCheckProbe(context, LineSensorPosition.RIGHT);
+        context.registerService(
+                new String[] { LineSensorHealthCheckProbe.class.getName(), IProbe.class.getName() },
+                this.rightLineSensorHealthCheckProbe,
+                null);
+
+        String rightLineSensorProbeListenerFilter = "(&(objectclass=" + ILineSensor.class.getName() + ")(id=" + LineSensorPosition.RIGHT.getSensorId() + "))";
+        context.addServiceListener(this.rightLineSensorHealthCheckProbe, rightLineSensorProbeListenerFilter);
 
         // Add the Notification Service Health Check probe.
         this.notificationServiceHealthCheckProbe = new NotificationServiceHealthCheckProbe(context);
@@ -77,6 +102,12 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.engineHealthCheckProbe);
         this.engineHealthCheckProbe = null;
+        
+        context.removeServiceListener(this.leftLineSensorHealthCheckProbe);
+        this.leftLineSensorHealthCheckProbe = null;
+        
+        context.removeServiceListener(this.rightLineSensorHealthCheckProbe);
+        this.rightLineSensorHealthCheckProbe = null;
 
         context.removeServiceListener(this.notificationServiceHealthCheckProbe);
         this.engineHealthCheckProbe = null;

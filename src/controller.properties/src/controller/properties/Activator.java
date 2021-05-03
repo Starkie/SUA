@@ -6,8 +6,10 @@ import org.osgi.framework.ServiceRegistration;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
+import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.controller.utils.LineSensorPosition;
 
 public class Activator implements BundleActivator {
 
@@ -23,6 +25,12 @@ public class Activator implements BundleActivator {
     private EngineHealthStatus engineHealthStatus;
     private ServiceRegistration<?> engineHealthStatusRegistration;
 
+    private LineSensorsHealthStatus leftLineSensorStatus;
+    private ServiceRegistration<?> leftLineSensorStatusRegistration;
+    
+    private LineSensorsHealthStatus rightLineSensorStatus;
+    private ServiceRegistration<?> rightLineSensorStatusRegistration;
+    
     private NotificationServiceHealthStatus notificationServiceStatus;
     private ServiceRegistration<?> notificationServiceStatusRegistration;
 
@@ -34,6 +42,12 @@ public class Activator implements BundleActivator {
 
         this.currentDrivingLevel = new CurrentDrivingServiceStatus(context);
         this.currentDrivingLevelRegistration = this.currentDrivingLevel.registerKnowledge();
+        
+        this.leftLineSensorStatus = new LineSensorsHealthStatus(bundleContext, LineSensorPosition.LEFT);
+        this.leftLineSensorStatusRegistration = this.leftLineSensorStatus.registerKnowledge();
+        
+        this.rightLineSensorStatus = new LineSensorsHealthStatus(bundleContext, LineSensorPosition.RIGHT);
+        this.rightLineSensorStatusRegistration = this.rightLineSensorStatus.registerKnowledge();
 
         this.engineHealthStatus = new EngineHealthStatus(context);
         this.engineHealthStatusRegistration = this.engineHealthStatus.registerKnowledge();
@@ -50,11 +64,16 @@ public class Activator implements BundleActivator {
         this.engineHealthStatusRegistration.unregister();
         this.notificationServiceStatusRegistration.unregister();
         this.roadContextRegistration.unregister();
+        
+        this.leftLineSensorStatusRegistration.unregister();
+        this.rightLineSensorStatusRegistration.unregister();
 
         this.currentDrivingLevel = null;
         this.engineHealthStatus = null;
+        this.leftLineSensorStatus = null;
         this.notificationServiceStatus = null;
         this.roadContext = null;
+        this.rightLineSensorStatus = null;
 
 		Activator.context = null;
 	}

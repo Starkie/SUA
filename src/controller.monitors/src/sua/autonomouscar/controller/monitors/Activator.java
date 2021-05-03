@@ -1,14 +1,19 @@
 package sua.autonomouscar.controller.monitors;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
 import sua.autonomouscar.controller.monitors.car.EngineHealthMonitor;
+import sua.autonomouscar.controller.monitors.car.LineSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.NotificationServiceHealthMonitor;
 import sua.autonomouscar.controller.monitors.road.IRoadContextMonitor;
 import sua.autonomouscar.controller.monitors.road.RoadContextMonitor;
+import sua.autonomouscar.controller.utils.LineSensorPosition;
 
 public class Activator implements BundleActivator {
 
@@ -16,8 +21,9 @@ public class Activator implements BundleActivator {
 
     private ServiceRegistration<DrivingServiceMonitor> drivingServiceMonitorRegistration;
     private ServiceRegistration<EngineHealthMonitor> engineHealthMonitor;
-    private ServiceRegistration<IRoadContextMonitor> roadContextServiceRegistration;
+    private ServiceRegistration<LineSensorsHealthMonitor> leftLineSensorHealthMonitorServiceRegistration;
     private ServiceRegistration<NotificationServiceHealthMonitor> notificationServiceHealthMonitorRegistration;
+    private ServiceRegistration<IRoadContextMonitor> roadContextServiceRegistration;
 
 	static BundleContext getContext() {
 		return context;
@@ -31,7 +37,21 @@ public class Activator implements BundleActivator {
 
         EngineHealthMonitor engineHealthMonitor = new EngineHealthMonitor(bundleContext);
         this.engineHealthMonitor = context.registerService(EngineHealthMonitor.class, engineHealthMonitor, null);
-
+        
+        // Left line sensor.
+        Dictionary<String, Object> leftLineSensorProps = new Hashtable<String, Object>();
+        leftLineSensorProps.put("position", LineSensorPosition.LEFT);
+        
+        LineSensorsHealthMonitor leftLineSensorsHealthMonitor = new LineSensorsHealthMonitor(bundleContext, LineSensorPosition.LEFT);
+        this.leftLineSensorHealthMonitorServiceRegistration = context.registerService(LineSensorsHealthMonitor.class, leftLineSensorsHealthMonitor, leftLineSensorProps);
+        
+        // Right line sensor.
+        Dictionary<String, Object> rightLineSensorProps = new Hashtable<String, Object>();
+        rightLineSensorProps.put("position", LineSensorPosition.RIGHT);
+        
+        LineSensorsHealthMonitor rightLineSensorsHealthMonitor = new LineSensorsHealthMonitor(bundleContext, LineSensorPosition.RIGHT);
+        this.leftLineSensorHealthMonitorServiceRegistration = context.registerService(LineSensorsHealthMonitor.class, rightLineSensorsHealthMonitor, rightLineSensorProps);
+        
         NotificationServiceHealthMonitor notificationServiceHealthMonitor = new NotificationServiceHealthMonitor(bundleContext);
         this.notificationServiceHealthMonitorRegistration = context.registerService(NotificationServiceHealthMonitor.class, notificationServiceHealthMonitor, null);
 
@@ -45,6 +65,9 @@ public class Activator implements BundleActivator {
 
 		this.engineHealthMonitor.unregister();
 		this.engineHealthMonitor = null;
+		
+		this.leftLineSensorHealthMonitorServiceRegistration.unregister();
+		this.notificationServiceHealthMonitorRegistration = null;
 
 		this.notificationServiceHealthMonitorRegistration.unregister();
 		this.notificationServiceHealthMonitorRegistration = null;
