@@ -5,10 +5,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
+import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
 
 public class Activator implements BundleActivator {
@@ -22,15 +24,27 @@ public class Activator implements BundleActivator {
 	private CurrentDrivingServiceStatus currentDrivingLevel;
     private ServiceRegistration<?> currentDrivingLevelRegistration;
 
+    private DistanceSensorHealthStatus frontDistanceSensorHealthStatus;
+    private ServiceRegistration<?> frontDistanceSensorHealthStatusRegistration;
+
+    private DistanceSensorHealthStatus leftDistanceSensorHealthStatus;
+    private ServiceRegistration<?> leftDistanceSensorHealthStatusRegistration;
+
+    private DistanceSensorHealthStatus rightDistanceSensorHealthStatus;
+    private ServiceRegistration<?> rightDistanceSensorHealthStatusRegistration;
+
+    private DistanceSensorHealthStatus rearDistanceSensorHealthStatus;
+    private ServiceRegistration<?> rearDistanceSensorHealthStatusRegistration;
+
     private EngineHealthStatus engineHealthStatus;
     private ServiceRegistration<?> engineHealthStatusRegistration;
 
     private LineSensorsHealthStatus leftLineSensorStatus;
     private ServiceRegistration<?> leftLineSensorStatusRegistration;
-    
+
     private LineSensorsHealthStatus rightLineSensorStatus;
     private ServiceRegistration<?> rightLineSensorStatusRegistration;
-    
+
     private NotificationServiceHealthStatus notificationServiceStatus;
     private ServiceRegistration<?> notificationServiceStatusRegistration;
 
@@ -42,10 +56,22 @@ public class Activator implements BundleActivator {
 
         this.currentDrivingLevel = new CurrentDrivingServiceStatus(context);
         this.currentDrivingLevelRegistration = this.currentDrivingLevel.registerKnowledge();
-        
+
+        this.frontDistanceSensorHealthStatus = new DistanceSensorHealthStatus(bundleContext, DistanceSensorPositon.FRONT);
+        this.frontDistanceSensorHealthStatusRegistration  = this.frontDistanceSensorHealthStatus.registerKnowledge();
+
+        this.leftDistanceSensorHealthStatus = new DistanceSensorHealthStatus(bundleContext, DistanceSensorPositon.LEFT);
+        this.leftDistanceSensorHealthStatusRegistration  = this.leftDistanceSensorHealthStatus.registerKnowledge();
+
+        this.rightDistanceSensorHealthStatus = new DistanceSensorHealthStatus(bundleContext, DistanceSensorPositon.RIGHT);
+        this.rightDistanceSensorHealthStatusRegistration  = this.rightDistanceSensorHealthStatus.registerKnowledge();
+
+        this.rearDistanceSensorHealthStatus = new DistanceSensorHealthStatus(bundleContext, DistanceSensorPositon.REAR);
+        this.rearDistanceSensorHealthStatusRegistration  = this.rearDistanceSensorHealthStatus.registerKnowledge();
+
         this.leftLineSensorStatus = new LineSensorsHealthStatus(bundleContext, LineSensorPosition.LEFT);
         this.leftLineSensorStatusRegistration = this.leftLineSensorStatus.registerKnowledge();
-        
+
         this.rightLineSensorStatus = new LineSensorsHealthStatus(bundleContext, LineSensorPosition.RIGHT);
         this.rightLineSensorStatusRegistration = this.rightLineSensorStatus.registerKnowledge();
 
@@ -61,19 +87,34 @@ public class Activator implements BundleActivator {
 
 	public void stop(BundleContext bundleContext) throws Exception {
         this.currentDrivingLevelRegistration.unregister();
-        this.engineHealthStatusRegistration.unregister();
-        this.notificationServiceStatusRegistration.unregister();
-        this.roadContextRegistration.unregister();
-        
-        this.leftLineSensorStatusRegistration.unregister();
-        this.rightLineSensorStatusRegistration.unregister();
-
         this.currentDrivingLevel = null;
-        this.engineHealthStatus = null;
+
+        this.frontDistanceSensorHealthStatusRegistration.unregister();
+        this.frontDistanceSensorHealthStatus = null;
+
+        this.leftDistanceSensorHealthStatusRegistration.unregister();
+        this.leftDistanceSensorHealthStatus = null;
+
+        this.rightDistanceSensorHealthStatusRegistration.unregister();
+        this.rightDistanceSensorHealthStatus = null;
+
+        this.rearDistanceSensorHealthStatusRegistration.unregister();
+        this.rearDistanceSensorHealthStatus = null;
+
+        this.leftLineSensorStatusRegistration.unregister();
         this.leftLineSensorStatus = null;
-        this.notificationServiceStatus = null;
-        this.roadContext = null;
+
+        this.rightLineSensorStatusRegistration.unregister();
         this.rightLineSensorStatus = null;
+
+        this.engineHealthStatusRegistration.unregister();
+        this.engineHealthStatus = null;
+
+        this.notificationServiceStatusRegistration.unregister();
+        this.notificationServiceStatus = null;
+
+        this.roadContextRegistration.unregister();
+        this.roadContext = null;
 
 		Activator.context = null;
 	}
