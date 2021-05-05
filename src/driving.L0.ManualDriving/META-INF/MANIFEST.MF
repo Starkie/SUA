@@ -11,3 +11,4 @@ Import-Package: org.osgi.framework,
  sua.autonomouscar.infrastructure.driving,
  sua.autonomouscar.interfaces,
  sua.autonomouscar.simulation.interfaces
+Export-Package: sua.autonomouscar.driving.l0.manual

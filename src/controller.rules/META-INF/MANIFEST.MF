@@ -11,4 +11,6 @@ Require-Bundle: AutonomousCar.interfaces,
  controller,
  AutonomousCar.infrastructure,
  driving.L2.AdaptiveCruiseControl,
- controller.properties
+ controller.properties,
+ driving.L1.AssistedDriving,
+ driving.L0.ManualDriving

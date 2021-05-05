@@ -26,7 +26,7 @@ import sua.autonomouscar.infrastructure.Thing;
 public class SwitchToL1AssistedDrivingFromL0Rule extends AdaptionRuleBase {
     // The default longitudinal security distance is of 100m (10000 cm).
     private static final int LONGITUDINAL_SECURITY_DISTANCE = 10000;
-	
+
 	private BundleContext context;
 
 	public SwitchToL1AssistedDrivingFromL0Rule(BundleContext context) {
@@ -38,45 +38,54 @@ public class SwitchToL1AssistedDrivingFromL0Rule extends AdaptionRuleBase {
 	    CurrentDrivingServiceStatus currentDrivingServiceStatus = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
 	    DistanceSensorHealthStatus frontDistanceSensorHealthStatus = OSGiUtils.getService(context, DistanceSensorHealthStatus.class, String.format("(%s=%s)", "position", DistanceSensorPositon.FRONT));
         LineSensorsHealthStatus leftLineSensorsHealthStatus = OSGiUtils.getService(context, LineSensorsHealthStatus.class, String.format("(%s=%s)", "position", LineSensorPosition.LEFT));
-        LineSensorsHealthStatus rightLineSensorsHealthStatus = OSGiUtils.getService(context, LineSensorsHealthStatus.class, String.format("(%s=%s)", "position", LineSensorPosition.RIGHT));        
-        
+        LineSensorsHealthStatus rightLineSensorsHealthStatus = OSGiUtils.getService(context, LineSensorsHealthStatus.class, String.format("(%s=%s)", "position", LineSensorPosition.RIGHT));
+
         if (currentDrivingServiceStatus == null
             || frontDistanceSensorHealthStatus == null
             || leftLineSensorsHealthStatus == null
             || rightLineSensorsHealthStatus == null
             || !evaluateRuleCondition(currentDrivingServiceStatus, frontDistanceSensorHealthStatus, leftLineSensorsHealthStatus, rightLineSensorsHealthStatus))
         {
-            return; 
+            return;
         }
-        
+
         System.out.println("[ Controller ] Executing the " + this.getClass().getSimpleName() + " rule.");
-        
+
         IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
-		
+
 		ServiceReference<IL1_AssistedDriving> l1DrivingServiceReference = context.getServiceReference(IL1_AssistedDriving.class);
-		IL1_AssistedDriving l1DrivingService = context.getService(l1DrivingServiceReference);
-		
-		if (l1DrivingService == null)
-		{
-		    l1DrivingService = initializeL1AssistedDriving();
-		}
-		
+
+		IL1_AssistedDriving l1DrivingService;
+
+		if (l1DrivingServiceReference != null)
+        {
+		    l1DrivingService = context.getService(l1DrivingServiceReference);
+        }
+        else
+        {
+            l1DrivingService = initializeL1AssistedDriving();
+        }
+
 		IDistanceSensor distanceSensor = AutonomousVehicleContextUtils.findDistanceSensor(context, DistanceSensorPositon.FRONT);
-		
+
 		ILineSensor leftLineSensor = AutonomousVehicleContextUtils.findLineSensor(context, LineSensorPosition.LEFT);
 		ILineSensor rightLineSensor = AutonomousVehicleContextUtils.findLineSensor(context, LineSensorPosition.RIGHT);
-		
+
 		l1DrivingService.setFrontDistanceSensor(((Thing)distanceSensor).getId());
 		l1DrivingService.setLeftLineSensor(((Thing)leftLineSensor).getId());
 		l1DrivingService.setRightLineSensor(((Thing)rightLineSensor).getId());
-		
+
 		l1DrivingService.setLongitudinalSecurityDistance(LONGITUDINAL_SECURITY_DISTANCE);
-		
+
 		// Unregister the current driving service and replace it with the L1_AssistedDriving.
-        ((Thing)currentDrivingService).unregisterThing();
+		if (currentDrivingService != null)
+		{
+		    ((Thing)currentDrivingService).unregisterThing();
+		}
+
 		l1DrivingService.startDriving();
 	}
-	
+
     private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus) {
         return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L0
                 && frontDistanceSensorHealthStatus.isAvailable()

@@ -19,6 +19,7 @@ public class Activator implements BundleActivator {
 	}
 
 	private EnableNotificationsInL1Rule enableNotificationsInL1Rule;
+	private SwitchToL0ManualDrivingFromL1 switchToL0ManualDrivingFromL1;
 	private SwitchToL1AssistedDrivingFromL0Rule switchToL1AssistedDrivingFromL0Rule;
     private SwithToL2AdaptiveCruiseControlFromL1Rule swithToL2AdaptiveCruiseControlFromL1Rule;
 
@@ -28,10 +29,14 @@ public class Activator implements BundleActivator {
 		this.enableNotificationsInL1Rule = new EnableNotificationsInL1Rule(bundleContext);
 		String enableNotificationSystemInL1ServiceFilter = createFilter(CurrentDrivingServiceStatus.class, NotificationServiceHealthStatus.class);
 		context.addServiceListener(enableNotificationsInL1Rule, enableNotificationSystemInL1ServiceFilter);
-		
+
+		this.switchToL0ManualDrivingFromL1 = new SwitchToL0ManualDrivingFromL1(context);
+		String swithToL0FromL1Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class);
+        context.addServiceListener(this.switchToL0ManualDrivingFromL1, swithToL0FromL1Filter);
+
 		this.switchToL1AssistedDrivingFromL0Rule = new SwitchToL1AssistedDrivingFromL0Rule(context);
-        String swithToL1AccFromL0Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class);
-        context.addServiceListener(this.switchToL1AssistedDrivingFromL0Rule, swithToL1AccFromL0Filter);
+        String swithToL1FromL0Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class);
+        context.addServiceListener(this.switchToL1AssistedDrivingFromL0Rule, swithToL1FromL0Filter);
 
         this.swithToL2AdaptiveCruiseControlFromL1Rule = new SwithToL2AdaptiveCruiseControlFromL1Rule(context);
         String swithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class, DistanceSensorHealthStatus.class);
@@ -41,7 +46,10 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext bundleContext) throws Exception {
 	    context.removeServiceListener(this.enableNotificationsInL1Rule);
 	    this.enableNotificationsInL1Rule = null;
-	    
+
+	    context.removeServiceListener(this.switchToL0ManualDrivingFromL1);
+        this.switchToL0ManualDrivingFromL1 = null;
+
 	    context.removeServiceListener(this.switchToL1AssistedDrivingFromL0Rule);
         this.switchToL1AssistedDrivingFromL0Rule = null;
 

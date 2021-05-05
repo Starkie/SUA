@@ -54,9 +54,15 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
         IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
 
         ServiceReference<IL2_AdaptiveCruiseControl> l2DrivingServiceReference = context.getServiceReference(IL2_AdaptiveCruiseControl.class);
-        IL2_AdaptiveCruiseControl l2DrivingService = context.getService(l2DrivingServiceReference);
 
-        if (l2DrivingService == null) {
+        IL2_AdaptiveCruiseControl l2DrivingService;
+
+        if (l2DrivingServiceReference != null)
+        {
+            l2DrivingService = context.getService(l2DrivingServiceReference);
+        }
+        else
+        {
             l2DrivingService = initializeL2AdaptiveCruiseControl();
         }
 
@@ -68,7 +74,11 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
         l2DrivingService.setLateralSecurityDistance(LATERAL_SECURITY_DISTANCE);
 
         // Unregister the current driving service and replace it with the L2_AdaptiveCruiseControl.
-        ((Thing)currentDrivingService).unregisterThing();
+        if (currentDrivingService != null)
+        {
+            ((Thing)currentDrivingService).unregisterThing();
+        }
+
         l2DrivingService.startDriving();
     }
 
