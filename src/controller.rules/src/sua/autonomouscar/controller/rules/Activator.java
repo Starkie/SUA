@@ -4,6 +4,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
+import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
@@ -28,14 +29,12 @@ public class Activator implements BundleActivator {
 		String enableNotificationSystemInL1ServiceFilter = createFilter(CurrentDrivingServiceStatus.class, NotificationServiceHealthStatus.class);
 		context.addServiceListener(enableNotificationsInL1Rule, enableNotificationSystemInL1ServiceFilter);
 		
-		// TODO: ADD FILTERS FOR DISTANCE SENSORS.
 		this.switchToL1AssistedDrivingFromL0Rule = new SwitchToL1AssistedDrivingFromL0Rule(context);
-        String swithToL1AccFromL0Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class);
+        String swithToL1AccFromL0Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class);
         context.addServiceListener(this.switchToL1AssistedDrivingFromL0Rule, swithToL1AccFromL0Filter);
 
-        // TODO: ADD FILTERS FOR DISTANCE SENSORS.
         this.swithToL2AdaptiveCruiseControlFromL1Rule = new SwithToL2AdaptiveCruiseControlFromL1Rule(context);
-        String swithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class);
+        String swithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class, DistanceSensorHealthStatus.class);
         context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, swithToL2AccFromL1Filter);
 	}
 

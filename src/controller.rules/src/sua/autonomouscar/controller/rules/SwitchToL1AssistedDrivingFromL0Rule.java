@@ -4,6 +4,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
+import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
@@ -35,15 +36,15 @@ public class SwitchToL1AssistedDrivingFromL0Rule extends AdaptionRuleBase {
 	@Override
 	public void evaluateAndExecute() {
 	    CurrentDrivingServiceStatus currentDrivingServiceStatus = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
+	    DistanceSensorHealthStatus frontDistanceSensorHealthStatus = OSGiUtils.getService(context, DistanceSensorHealthStatus.class, String.format("(%s=%s)", "position", DistanceSensorPositon.FRONT));
         LineSensorsHealthStatus leftLineSensorsHealthStatus = OSGiUtils.getService(context, LineSensorsHealthStatus.class, String.format("(%s=%s)", "position", LineSensorPosition.LEFT));
-        LineSensorsHealthStatus rightLineSensorsHealthStatus = OSGiUtils.getService(context, LineSensorsHealthStatus.class, String.format("(%s=%s)", "position", LineSensorPosition.RIGHT));
-       
-        // TODO: Create healthcheck properties for the IDistanceSensor.
+        LineSensorsHealthStatus rightLineSensorsHealthStatus = OSGiUtils.getService(context, LineSensorsHealthStatus.class, String.format("(%s=%s)", "position", LineSensorPosition.RIGHT));        
         
         if (currentDrivingServiceStatus == null
+            || frontDistanceSensorHealthStatus == null
             || leftLineSensorsHealthStatus == null
             || rightLineSensorsHealthStatus == null
-            || !evaluateRuleCondition(currentDrivingServiceStatus, leftLineSensorsHealthStatus, rightLineSensorsHealthStatus))
+            || !evaluateRuleCondition(currentDrivingServiceStatus, frontDistanceSensorHealthStatus, leftLineSensorsHealthStatus, rightLineSensorsHealthStatus))
         {
             return; 
         }
@@ -76,8 +77,9 @@ public class SwitchToL1AssistedDrivingFromL0Rule extends AdaptionRuleBase {
 		l1DrivingService.startDriving();
 	}
 	
-    private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus) {
+    private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus) {
         return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L0
+                && frontDistanceSensorHealthStatus.isAvailable()
                 && leftLineSensorsHealthStatus.isAvailable()
                 && rightLineSensorsHealthStatus.isAvailable();
     }

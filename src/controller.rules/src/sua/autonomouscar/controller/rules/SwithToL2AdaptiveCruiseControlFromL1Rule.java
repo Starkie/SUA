@@ -4,6 +4,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
+import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
@@ -35,15 +36,15 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
     @Override
     public void evaluateAndExecute() {
         CurrentDrivingServiceStatus currentDrivingServiceStatus = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
-        RoadContext roadContext = OSGiUtils.getService(context, RoadContext.class);
+        DistanceSensorHealthStatus frontDistanceSensorHealthStatus = OSGiUtils.getService(context, DistanceSensorHealthStatus.class, String.format("(%s=%s)", "position", DistanceSensorPositon.FRONT));
         EngineHealthStatus engineHealthStatus = OSGiUtils.getService(context, EngineHealthStatus.class);
-
-        // TODO: Create healthcheck properties for the IDistanceSensor.
+        RoadContext roadContext = OSGiUtils.getService(context, RoadContext.class);
 
         if (currentDrivingServiceStatus == null
-                || roadContext == null
+                || frontDistanceSensorHealthStatus == null
                 || engineHealthStatus == null
-                || !evaluateRuleCondition(currentDrivingServiceStatus, roadContext, engineHealthStatus))
+                || roadContext == null
+                || !evaluateRuleCondition(currentDrivingServiceStatus, roadContext, frontDistanceSensorHealthStatus, engineHealthStatus))
         {
             return;
         }
@@ -71,8 +72,9 @@ public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
         l2DrivingService.startDriving();
     }
 
-    private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, RoadContext roadContext, EngineHealthStatus engineHealthStatus) {
+    private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, RoadContext roadContext, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, EngineHealthStatus engineHealthStatus) {
         return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L1
+                && frontDistanceSensorHealthStatus.isAvailable()
                 && roadContext.getType() == ERoadType.HIGHWAY
                 && engineHealthStatus.isAvailable();
     }
