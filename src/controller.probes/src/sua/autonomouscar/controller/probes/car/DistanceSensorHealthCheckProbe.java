@@ -27,6 +27,7 @@ public class DistanceSensorHealthCheckProbe implements IProbe<IDistanceSensor>, 
             case ServiceEvent.REGISTERED:
             case ServiceEvent.MODIFIED:
             case ServiceEvent.UNREGISTERING:
+                // Get any distance sensor available in the given position. If none is avaiable, it will return null.
                 this.registerMeasurement(AutonomousVehicleContextUtils.findDistanceSensor(this.context, this.position));
 
                 break;

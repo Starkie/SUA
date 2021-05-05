@@ -69,7 +69,7 @@ public class Activator implements BundleActivator {
                 this.frontDistanceSensorHealthCheckProbe,
                 null);
 
-        String frontDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(id=" + DistanceSensorPositon.FRONT.getNormalSensorId() + "))";
+        String frontDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(|(id=" + DistanceSensorPositon.FRONT.getNormalSensorId() + ")(id=" + DistanceSensorPositon.FRONT.getLidarSensorId() + ")))";
         context.addServiceListener(this.frontDistanceSensorHealthCheckProbe, frontDistanceSensorProbeListenerFilter);
 
         // Add the Left Distance Sensor Health Check probe.
@@ -79,7 +79,7 @@ public class Activator implements BundleActivator {
                 this.leftDistanceSensorHealthCheckProbe,
                 null);
 
-        String leftDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(id=" + DistanceSensorPositon.LEFT.getNormalSensorId() + "))";
+        String leftDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(|(id=" + DistanceSensorPositon.LEFT.getNormalSensorId() + ")(id=" + DistanceSensorPositon.LEFT.getLidarSensorId() + ")))";
         context.addServiceListener(this.leftDistanceSensorHealthCheckProbe, leftDistanceSensorProbeListenerFilter);
 
         // Add the Right Distance Sensor Health Check probe.
@@ -89,7 +89,7 @@ public class Activator implements BundleActivator {
                 this.rightDistanceSensorHealthCheckProbe,
                 null);
 
-        String rightDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(id=" + DistanceSensorPositon.RIGHT.getNormalSensorId() + "))";
+        String rightDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(|(id=" + DistanceSensorPositon.RIGHT.getNormalSensorId() + ")(id=" + DistanceSensorPositon.RIGHT.getLidarSensorId() + ")))";
         context.addServiceListener(this.rightDistanceSensorHealthCheckProbe, rightDistanceSensorProbeListenerFilter);
 
         // Add the Rear Distance Sensor Health Check probe.
@@ -99,7 +99,7 @@ public class Activator implements BundleActivator {
                 this.rearDistanceSensorHealthCheckProbe,
                 null);
 
-        String rearDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(id=" + DistanceSensorPositon.REAR.getNormalSensorId() + "))";
+        String rearDistanceSensorProbeListenerFilter = "(&(objectclass=" + IDistanceSensor.class.getName() + ")(|(id=" + DistanceSensorPositon.REAR.getNormalSensorId() + ")(id=" + DistanceSensorPositon.REAR.getLidarSensorId() + ")))";
         context.addServiceListener(this.rearDistanceSensorHealthCheckProbe, rearDistanceSensorProbeListenerFilter);
 
         // Add the Left Line Sensor Health Check probe.
