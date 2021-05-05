@@ -9,6 +9,7 @@ import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.infrastructure.devices.Steering;
 
 public class Activator implements BundleActivator {
 
@@ -22,6 +23,7 @@ public class Activator implements BundleActivator {
 	private SwitchToL0ManualDrivingFromL1 switchToL0ManualDrivingFromL1;
 	private SwitchToL1AssistedDrivingFromL0Rule switchToL1AssistedDrivingFromL0Rule;
     private SwithToL2AdaptiveCruiseControlFromL1Rule swithToL2AdaptiveCruiseControlFromL1Rule;
+    private SwitchToL2LaneKeepingAssistFromL1 swithToL2LaneKeepingAssistFromL1Rule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -40,7 +42,11 @@ public class Activator implements BundleActivator {
 
         this.swithToL2AdaptiveCruiseControlFromL1Rule = new SwithToL2AdaptiveCruiseControlFromL1Rule(context);
         String swithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class, DistanceSensorHealthStatus.class);
-        context.addServiceListener(swithToL2AdaptiveCruiseControlFromL1Rule, swithToL2AccFromL1Filter);
+        context.addServiceListener(this.swithToL2AdaptiveCruiseControlFromL1Rule, swithToL2AccFromL1Filter);
+        
+        this.swithToL2LaneKeepingAssistFromL1Rule = new SwitchToL2LaneKeepingAssistFromL1(context);
+        String swithToL2LaneFromL1Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, RoadContext.class, Steering.class);
+        context.addServiceListener(this.swithToL2LaneKeepingAssistFromL1Rule, swithToL2LaneFromL1Filter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
