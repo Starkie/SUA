@@ -9,6 +9,7 @@ import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
+import sua.autonomouscar.controller.properties.car.SteeringHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
@@ -51,6 +52,9 @@ public class Activator implements BundleActivator {
     private RoadContext roadContext;
     private ServiceRegistration<?>roadContextRegistration;
 
+    private SteeringHealthStatus steeringHealthStatus;
+    private ServiceRegistration<?> steeringHealthStatusRegistration;
+
 	public void start(BundleContext bundleContext) throws Exception {
 	    Activator.context = bundleContext;
 
@@ -83,6 +87,9 @@ public class Activator implements BundleActivator {
 
         this.roadContext = new RoadContext(context);
         this.roadContextRegistration = this.roadContext.registerKnowledge();
+
+        this.steeringHealthStatus = new SteeringHealthStatus(context);
+        this.steeringHealthStatusRegistration = this.steeringHealthStatus.registerKnowledge();
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -115,6 +122,9 @@ public class Activator implements BundleActivator {
 
         this.roadContextRegistration.unregister();
         this.roadContext = null;
+
+        this.steeringHealthStatusRegistration.unregister();
+        this.steeringHealthStatus = null;
 
 		Activator.context = null;
 	}

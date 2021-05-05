@@ -12,6 +12,7 @@ import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
 import sua.autonomouscar.controller.monitors.car.EngineHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.LineSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.NotificationServiceHealthMonitor;
+import sua.autonomouscar.controller.monitors.car.SteeringHealthMonitor;
 import sua.autonomouscar.controller.monitors.road.IRoadContextMonitor;
 import sua.autonomouscar.controller.monitors.road.RoadContextMonitor;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
@@ -31,6 +32,7 @@ public class Activator implements BundleActivator {
     private ServiceRegistration<LineSensorsHealthMonitor> rightLineSensorHealthMonitorServiceRegistration;
     private ServiceRegistration<NotificationServiceHealthMonitor> notificationServiceHealthMonitorRegistration;
     private ServiceRegistration<IRoadContextMonitor> roadContextServiceRegistration;
+    private ServiceRegistration<SteeringHealthMonitor> steeringContextServiceRegistration;
 
 	static BundleContext getContext() {
 		return context;
@@ -92,6 +94,9 @@ public class Activator implements BundleActivator {
 
         IRoadContextMonitor roadContextMonitor = new RoadContextMonitor(bundleContext);
         this.roadContextServiceRegistration = context.registerService(IRoadContextMonitor.class, roadContextMonitor, null);
+
+        SteeringHealthMonitor steeringContextMonitor = new SteeringHealthMonitor(bundleContext);
+        this.steeringContextServiceRegistration = context.registerService(SteeringHealthMonitor.class, steeringContextMonitor, null);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -116,14 +121,17 @@ public class Activator implements BundleActivator {
 		this.leftLineSensorHealthMonitorServiceRegistration.unregister();
 		this.leftDistanceSensorsHealthMonitorServiceRegistration = null;
 
-		this.rightDistanceSensorsHealthMonitorServiceRegistration.unregister();
-        this.rightDistanceSensorsHealthMonitorServiceRegistration = null;
+		this.rightLineSensorHealthMonitorServiceRegistration.unregister();
+        this.rightLineSensorHealthMonitorServiceRegistration = null;
 
 		this.notificationServiceHealthMonitorRegistration.unregister();
 		this.notificationServiceHealthMonitorRegistration = null;
 
 		this.roadContextServiceRegistration.unregister();
 		this.roadContextServiceRegistration = null;
+
+		this.steeringContextServiceRegistration.unregister();
+        this.steeringContextServiceRegistration = null;
 
 		Activator.context = null;
 	}

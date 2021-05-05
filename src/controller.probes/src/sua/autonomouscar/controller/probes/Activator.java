@@ -9,6 +9,7 @@ import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.car.EngineHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
+import sua.autonomouscar.controller.probes.car.SteeringHealthCheckProbe;
 import sua.autonomouscar.controller.probes.road.RoadContextProbe;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
@@ -16,6 +17,7 @@ import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.devices.interfaces.IEngine;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
+import sua.autonomouscar.devices.interfaces.ISteering;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.interaction.interfaces.INotificationService;
 
@@ -37,6 +39,7 @@ public class Activator implements BundleActivator {
     private DistanceSensorHealthCheckProbe frontDistanceSensorHealthCheckProbe;
     private DistanceSensorHealthCheckProbe rightDistanceSensorHealthCheckProbe;
     private DistanceSensorHealthCheckProbe rearDistanceSensorHealthCheckProbe;
+    private SteeringHealthCheckProbe steeringHealthCheckProbe;
 
     public void start(BundleContext bundleContext) throws Exception {
         Activator.context = bundleContext;
@@ -141,6 +144,16 @@ public class Activator implements BundleActivator {
 
         String roadContextProbeListenerFilter = "(objectclass=" + IRoadSensor.class.getName() + ")";
         context.addServiceListener(this.roadContextProbe, roadContextProbeListenerFilter);
+
+        // Add the Steering Health Check probe.
+        this.steeringHealthCheckProbe = new SteeringHealthCheckProbe(context);
+        context.registerService(
+                new String[] { SteeringHealthCheckProbe.class.getName(), IProbe.class.getName() },
+                this.steeringHealthCheckProbe,
+                null);
+
+        String steeringHealthCheckProbeListenerFilter = "(objectclass=" + ISteering.class.getName() + ")";
+        context.addServiceListener(this.steeringHealthCheckProbe, steeringHealthCheckProbeListenerFilter);
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
@@ -173,6 +186,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.roadContextProbe);
         this.roadContextProbe = null;
+
+        context.removeServiceListener(this.steeringHealthCheckProbe);
+        this.steeringHealthCheckProbe = null;
 
         Activator.context = null;
     }
