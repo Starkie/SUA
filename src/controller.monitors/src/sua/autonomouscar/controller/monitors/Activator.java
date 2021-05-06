@@ -10,6 +10,7 @@ import org.osgi.framework.ServiceRegistration;
 import sua.autonomouscar.controller.monitors.car.DistanceSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
 import sua.autonomouscar.controller.monitors.car.EngineHealthMonitor;
+import sua.autonomouscar.controller.monitors.car.HumanSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.LineSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.NotificationServiceHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.SteeringHealthMonitor;
@@ -27,12 +28,14 @@ public class Activator implements BundleActivator {
     private ServiceRegistration<DistanceSensorsHealthMonitor> rearDistanceSensorsHealthMonitorServiceRegistration;
     private ServiceRegistration<DistanceSensorsHealthMonitor> leftDistanceSensorsHealthMonitorServiceRegistration;
     private ServiceRegistration<DistanceSensorsHealthMonitor> rightDistanceSensorsHealthMonitorServiceRegistration;
-    private ServiceRegistration<EngineHealthMonitor> engineHealthMonitor;
+    private ServiceRegistration<EngineHealthMonitor> engineHealthMonitorServiceRegistration;
     private ServiceRegistration<LineSensorsHealthMonitor> leftLineSensorHealthMonitorServiceRegistration;
     private ServiceRegistration<LineSensorsHealthMonitor> rightLineSensorHealthMonitorServiceRegistration;
     private ServiceRegistration<NotificationServiceHealthMonitor> notificationServiceHealthMonitorRegistration;
     private ServiceRegistration<IRoadContextMonitor> roadContextServiceRegistration;
     private ServiceRegistration<SteeringHealthMonitor> steeringContextServiceRegistration;
+
+    private ServiceRegistration<HumanSensorsHealthMonitor> humanSensorsHealthMonitorServiceRegistration;
 
 	static BundleContext getContext() {
 		return context;
@@ -45,7 +48,10 @@ public class Activator implements BundleActivator {
         this.drivingServiceMonitorRegistration = context.registerService(DrivingServiceMonitor.class, drivingServiceMonitor, null);
 
         EngineHealthMonitor engineHealthMonitor = new EngineHealthMonitor(bundleContext);
-        this.engineHealthMonitor = context.registerService(EngineHealthMonitor.class, engineHealthMonitor, null);
+        this.engineHealthMonitorServiceRegistration = context.registerService(EngineHealthMonitor.class, engineHealthMonitor, null);
+
+        HumanSensorsHealthMonitor humanSensorsHealthMonitor = new HumanSensorsHealthMonitor(bundleContext);
+        this.humanSensorsHealthMonitorServiceRegistration = context.registerService(HumanSensorsHealthMonitor.class, humanSensorsHealthMonitor, null);
 
         // Front distance sensor.
         Dictionary<String, Object> frontDistanceSensorProps = new Hashtable<String, Object>();
@@ -103,8 +109,11 @@ public class Activator implements BundleActivator {
 		this.drivingServiceMonitorRegistration.unregister();
 		this.drivingServiceMonitorRegistration = null;
 
-		this.engineHealthMonitor.unregister();
-		this.engineHealthMonitor = null;
+		this.engineHealthMonitorServiceRegistration.unregister();
+		this.engineHealthMonitorServiceRegistration = null;
+
+		this.humanSensorsHealthMonitorServiceRegistration.unregister();
+        this.humanSensorsHealthMonitorServiceRegistration = null;
 
 		this.frontDistanceSensorsHealthMonitorServiceRegistration.unregister();
         this.frontDistanceSensorsHealthMonitorServiceRegistration = null;

@@ -7,6 +7,7 @@ import org.osgi.framework.ServiceRegistration;
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
+import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.car.SteeringHealthStatus;
@@ -39,6 +40,9 @@ public class Activator implements BundleActivator {
 
     private EngineHealthStatus engineHealthStatus;
     private ServiceRegistration<?> engineHealthStatusRegistration;
+
+    private HumanSensorsHealthStatus humanSensorsHealthStatus;
+    private ServiceRegistration<?> humanSensorsHealthStatusRegistration;
 
     private LineSensorsHealthStatus leftLineSensorStatus;
     private ServiceRegistration<?> leftLineSensorStatusRegistration;
@@ -82,6 +86,9 @@ public class Activator implements BundleActivator {
         this.engineHealthStatus = new EngineHealthStatus(context);
         this.engineHealthStatusRegistration = this.engineHealthStatus.registerKnowledge();
 
+        this.humanSensorsHealthStatus = new HumanSensorsHealthStatus(context);
+        this.humanSensorsHealthStatusRegistration = this.humanSensorsHealthStatus.registerKnowledge();
+
         this.notificationServiceStatus = new NotificationServiceHealthStatus(context);
         this.notificationServiceStatusRegistration = this.notificationServiceStatus.registerKnowledge();
 
@@ -116,6 +123,9 @@ public class Activator implements BundleActivator {
 
         this.engineHealthStatusRegistration.unregister();
         this.engineHealthStatus = null;
+
+        this.humanSensorsHealthStatusRegistration.unregister();
+        this.humanSensorsHealthStatus = null;
 
         this.notificationServiceStatusRegistration.unregister();
         this.notificationServiceStatus = null;

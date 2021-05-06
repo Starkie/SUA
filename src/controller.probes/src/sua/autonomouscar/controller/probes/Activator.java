@@ -7,6 +7,7 @@ import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.probes.car.DistanceSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.car.EngineHealthCheckProbe;
+import sua.autonomouscar.controller.probes.car.HumanSensorsHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.SteeringHealthCheckProbe;
@@ -15,6 +16,7 @@ import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.devices.interfaces.IEngine;
+import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
 import sua.autonomouscar.devices.interfaces.ISteering;
@@ -32,6 +34,7 @@ public class Activator implements BundleActivator {
     private RoadContextProbe roadContextProbe;
     private DrivingServiceProbe drivingServiceProbe;
     private EngineHealthCheckProbe engineHealthCheckProbe;
+    private HumanSensorsHealthCheckProbe humanSensorsHealthCheckProbe;
     private LineSensorHealthCheckProbe leftLineSensorHealthCheckProbe;
     private LineSensorHealthCheckProbe rightLineSensorHealthCheckProbe;
     private NotificationServiceHealthCheckProbe notificationServiceHealthCheckProbe;
@@ -64,6 +67,16 @@ public class Activator implements BundleActivator {
 
         String engineHealthCheckProbeListenerFilter = "(objectclass=" + IEngine.class.getName() + ")";
         context.addServiceListener(this.engineHealthCheckProbe, engineHealthCheckProbeListenerFilter);
+
+        // Add the Human Sensors Health Check probe.
+        this.humanSensorsHealthCheckProbe = new HumanSensorsHealthCheckProbe(context);
+        context.registerService(
+                new String[] { HumanSensorsHealthCheckProbe.class.getName(), IProbe.class.getName() },
+                this.humanSensorsHealthCheckProbe,
+                null);
+
+        String humanSensorsHealthCheckProbeListenerFilter = "(objectclass=" + IHumanSensors.class.getName() + ")";
+        context.addServiceListener(this.humanSensorsHealthCheckProbe, humanSensorsHealthCheckProbeListenerFilter);
 
         // Add the Front Distance Sensor Health Check probe.
         this.frontDistanceSensorHealthCheckProbe = new DistanceSensorHealthCheckProbe(context, DistanceSensorPositon.FRONT);
@@ -162,6 +175,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.engineHealthCheckProbe);
         this.engineHealthCheckProbe = null;
+
+        context.removeServiceListener(this.humanSensorsHealthCheckProbe);
+        this.humanSensorsHealthCheckProbe = null;
 
         context.removeServiceListener(this.frontDistanceSensorHealthCheckProbe);
         this.frontDistanceSensorHealthCheckProbe = null;
