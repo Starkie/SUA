@@ -7,6 +7,7 @@ import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.probes.car.DistanceSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.car.EngineHealthCheckProbe;
+import sua.autonomouscar.controller.probes.car.FallbackPlanHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.HumanSensorsHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
@@ -21,6 +22,7 @@ import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
 import sua.autonomouscar.devices.interfaces.ISteering;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
+import sua.autonomouscar.driving.interfaces.IFallbackPlan;
 import sua.autonomouscar.interaction.interfaces.INotificationService;
 
 public class Activator implements BundleActivator {
@@ -34,6 +36,7 @@ public class Activator implements BundleActivator {
     private RoadContextProbe roadContextProbe;
     private DrivingServiceProbe drivingServiceProbe;
     private EngineHealthCheckProbe engineHealthCheckProbe;
+    private FallbackPlanHealthCheckProbe fallbackPlanHealthCheckProbe;
     private HumanSensorsHealthCheckProbe humanSensorsHealthCheckProbe;
     private LineSensorHealthCheckProbe leftLineSensorHealthCheckProbe;
     private LineSensorHealthCheckProbe rightLineSensorHealthCheckProbe;
@@ -67,6 +70,16 @@ public class Activator implements BundleActivator {
 
         String engineHealthCheckProbeListenerFilter = "(objectclass=" + IEngine.class.getName() + ")";
         context.addServiceListener(this.engineHealthCheckProbe, engineHealthCheckProbeListenerFilter);
+
+        // Add the Fallback Plan Health Check probe.
+        this.fallbackPlanHealthCheckProbe = new FallbackPlanHealthCheckProbe(context);
+        context.registerService(
+                new String[] { FallbackPlanHealthCheckProbe.class.getName(), IProbe.class.getName() },
+                this.fallbackPlanHealthCheckProbe,
+                null);
+
+        String fallbackPlanHealthCheckProbeListenerFilter = "(objectclass=" + IFallbackPlan.class.getName() + ")";
+        context.addServiceListener(this.fallbackPlanHealthCheckProbe, fallbackPlanHealthCheckProbeListenerFilter);
 
         // Add the Human Sensors Health Check probe.
         this.humanSensorsHealthCheckProbe = new HumanSensorsHealthCheckProbe(context);
@@ -175,6 +188,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.engineHealthCheckProbe);
         this.engineHealthCheckProbe = null;
+
+        context.removeServiceListener(this.fallbackPlanHealthCheckProbe);
+        this.fallbackPlanHealthCheckProbe = null;
 
         context.removeServiceListener(this.humanSensorsHealthCheckProbe);
         this.humanSensorsHealthCheckProbe = null;

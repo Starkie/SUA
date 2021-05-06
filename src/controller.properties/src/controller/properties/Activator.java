@@ -7,6 +7,7 @@ import org.osgi.framework.ServiceRegistration;
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
+import sua.autonomouscar.controller.properties.car.FallbackPlanHealthStatus;
 import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
@@ -58,6 +59,8 @@ public class Activator implements BundleActivator {
 
     private SteeringHealthStatus steeringHealthStatus;
     private ServiceRegistration<?> steeringHealthStatusRegistration;
+    private FallbackPlanHealthStatus fallbackPlanHealthStatus;
+    private ServiceRegistration<?> fallbackPlanHealthStatusRegistration;
 
 	public void start(BundleContext bundleContext) throws Exception {
 	    Activator.context = bundleContext;
@@ -85,6 +88,9 @@ public class Activator implements BundleActivator {
 
         this.engineHealthStatus = new EngineHealthStatus(context);
         this.engineHealthStatusRegistration = this.engineHealthStatus.registerKnowledge();
+
+        this.fallbackPlanHealthStatus = new FallbackPlanHealthStatus(context);
+        this.fallbackPlanHealthStatusRegistration = this.fallbackPlanHealthStatus.registerKnowledge();
 
         this.humanSensorsHealthStatus = new HumanSensorsHealthStatus(context);
         this.humanSensorsHealthStatusRegistration = this.humanSensorsHealthStatus.registerKnowledge();
@@ -123,6 +129,9 @@ public class Activator implements BundleActivator {
 
         this.engineHealthStatusRegistration.unregister();
         this.engineHealthStatus = null;
+
+        this.fallbackPlanHealthStatusRegistration.unregister();
+        this.fallbackPlanHealthStatus = null;
 
         this.humanSensorsHealthStatusRegistration.unregister();
         this.humanSensorsHealthStatus = null;
