@@ -14,4 +14,5 @@ Require-Bundle: AutonomousCar.interfaces,
  controller.properties,
  driving.L1.AssistedDriving,
  driving.L0.ManualDriving,
- driving.L2.LaneKeepingAssist
+ driving.L2.LaneKeepingAssist,
+ driving.L3.CityChauffer

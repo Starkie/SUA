@@ -6,6 +6,8 @@ import org.osgi.framework.BundleContext;
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
+import sua.autonomouscar.controller.properties.car.FallbackPlanHealthStatus;
+import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
@@ -24,6 +26,7 @@ public class Activator implements BundleActivator {
 	private SwitchToL1AssistedDrivingFromL0Rule switchToL1AssistedDrivingFromL0Rule;
     private SwithToL2AdaptiveCruiseControlFromL1Rule swithToL2AdaptiveCruiseControlFromL1Rule;
     private SwitchToL2LaneKeepingAssistFromL1 swithToL2LaneKeepingAssistFromL1Rule;
+    private SwitchToL3CityChaufferFromL2Rule swithToL3CityChaufferFromL2Rule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -47,6 +50,20 @@ public class Activator implements BundleActivator {
         this.swithToL2LaneKeepingAssistFromL1Rule = new SwitchToL2LaneKeepingAssistFromL1(context);
         String swithToL2LaneFromL1Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, RoadContext.class, Steering.class);
         context.addServiceListener(this.swithToL2LaneKeepingAssistFromL1Rule, swithToL2LaneFromL1Filter);
+        
+        this.swithToL3CityChaufferFromL2Rule = new SwitchToL3CityChaufferFromL2Rule(context);
+        String swithToL3FromL2RuleFilter = createFilter(
+            CurrentDrivingServiceStatus.class,
+            DistanceSensorHealthStatus.class, 
+            EngineHealthStatus.class,
+            FallbackPlanHealthStatus.class,
+            HumanSensorsHealthStatus.class,
+            LineSensorsHealthStatus.class,
+            NotificationServiceHealthStatus.class,
+            RoadContext.class,
+            Steering.class);
+        
+        context.addServiceListener(this.swithToL3CityChaufferFromL2Rule, swithToL3FromL2RuleFilter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -61,6 +78,9 @@ public class Activator implements BundleActivator {
 
 	    context.removeServiceListener(this.swithToL2AdaptiveCruiseControlFromL1Rule);
 	    this.swithToL2AdaptiveCruiseControlFromL1Rule = null;
+	    
+	    context.removeServiceListener(this.swithToL3CityChaufferFromL2Rule);
+        this.swithToL3CityChaufferFromL2Rule = null;
 
 		Activator.context = null;
 	}
