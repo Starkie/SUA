@@ -28,6 +28,7 @@ public class Activator implements BundleActivator {
     private SwitchToL2LaneKeepingAssistFromL1 swithToL2LaneKeepingAssistFromL1Rule;
     private SwitchToL3CityChaufferFromL2Rule swithToL3CityChaufferFromL2Rule;
     private SwitchToL3HighwayChaufferFromL2Rule swithToL3HighwayChaufferFromL2Rule;
+    private SwitchToL3TrafficJamChaufferFromL2Rule swithToL3TrafficJamChaufferFromL2Rule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -68,6 +69,9 @@ public class Activator implements BundleActivator {
 
         this.swithToL3HighwayChaufferFromL2Rule = new SwitchToL3HighwayChaufferFromL2Rule(context);
         context.addServiceListener(this.swithToL3HighwayChaufferFromL2Rule, swithToL3FromL2RuleFilter);
+        
+        this.swithToL3TrafficJamChaufferFromL2Rule = new SwitchToL3TrafficJamChaufferFromL2Rule(context);
+        context.addServiceListener(this.swithToL3TrafficJamChaufferFromL2Rule, swithToL3FromL2RuleFilter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -88,6 +92,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.swithToL3HighwayChaufferFromL2Rule);
         this.swithToL3HighwayChaufferFromL2Rule = null;
+        
+        context.removeServiceListener(this.swithToL3TrafficJamChaufferFromL2Rule);
+        this.swithToL3TrafficJamChaufferFromL2Rule = null;
 
 		Activator.context = null;
 	}
