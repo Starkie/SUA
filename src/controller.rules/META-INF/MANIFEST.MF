@@ -15,4 +15,5 @@ Require-Bundle: AutonomousCar.interfaces,
  driving.L1.AssistedDriving,
  driving.L0.ManualDriving,
  driving.L2.LaneKeepingAssist,
- driving.L3.CityChauffer
+ driving.L3.CityChauffer,
+ driving.L3.HighwayChauffer
