@@ -23,13 +23,13 @@ import sua.autonomouscar.interfaces.ERoadType;
 /**
  * This rule changes the autonomous driving module from {@link IL1_DrivingService} to {@link IL2_AdaptiveCruiseControl}.
  */
-public class SwithToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
+public class SwitchToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase {
     // The default lateral security distance is of 2.5m (250 cm).
     private static final int LATERAL_SECURITY_DISTANCE = 250;
 
     private BundleContext context;
 
-    public SwithToL2AdaptiveCruiseControlFromL1Rule(BundleContext context) {
+    public SwitchToL2AdaptiveCruiseControlFromL1Rule(BundleContext context) {
         this.context = context;
     }
 
