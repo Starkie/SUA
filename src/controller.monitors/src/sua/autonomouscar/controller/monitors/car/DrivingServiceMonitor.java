@@ -13,14 +13,18 @@ public class DrivingServiceMonitor {
         this.context = context;
     }
 
-    public void registerAutonomyLevelChange(DrivingAutonomyLevel autonomyLevel) {
+    public void registerAutonomyLevelChange(DrivingAutonomyLevel autonomyLevel, Class drivingServiceClass) {
         CurrentDrivingServiceStatus currentDrivingService = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
 
         // Only update it if the value has changed.
-        if (currentDrivingService != null && currentDrivingService.getAutonomyLevel() != autonomyLevel) {
-            System.out.println("[ Driving Service Monitor ] -  Updating the Autonomy Level to " + autonomyLevel);
+        if (currentDrivingService != null
+                && (currentDrivingService.getAutonomyLevel() != autonomyLevel
+                    || drivingServiceClass != currentDrivingService.getDrivingServiceClass())) {
 
-            currentDrivingService.setAutonomyLevel(autonomyLevel);
+            System.out.println("[ Driving Service Monitor ] -  Updating the Autonomy Level to " + autonomyLevel);
+            System.out.println("[ Driving Service Monitor ] -  Updating the Driving Service Class to " + drivingServiceClass.getSimpleName());
+
+            currentDrivingService.setAutonomyLevel(autonomyLevel, drivingServiceClass);
         }
     }
 }

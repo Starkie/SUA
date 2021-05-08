@@ -26,8 +26,9 @@ public class DrivingServiceProbe implements IProbe<IDrivingService>, ServiceList
         if (drivingService != null && drivingService.isDriving())
         {
             DrivingAutonomyLevel autonomyLevel = GetAutonomyLevel(drivingService);
+            Class drivingServiceClass = drivingService.getClass();
 
-            drivingServiceMonitor.registerAutonomyLevelChange(autonomyLevel);
+            drivingServiceMonitor.registerAutonomyLevelChange(autonomyLevel, drivingServiceClass);
         }
     }
 
