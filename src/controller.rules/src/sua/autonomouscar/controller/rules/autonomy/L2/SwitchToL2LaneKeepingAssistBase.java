@@ -1,4 +1,4 @@
-package sua.autonomouscar.controller.rules;
+package sua.autonomouscar.controller.rules.autonomy.L2;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -7,8 +7,8 @@ import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.SteeringHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.controller.rules.AdaptionRuleBase;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
-import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.ISteering;
@@ -17,12 +17,11 @@ import sua.autonomouscar.driving.interfaces.IL2_LaneKeepingAssist;
 import sua.autonomouscar.driving.l2.lka.L2_LaneKeepingAssist;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
-import sua.autonomouscar.interfaces.ERoadType;
 
-public class SwitchToL2LaneKeepingAssistFromL1 extends AdaptionRuleBase {
-    private BundleContext context;
+public abstract class SwitchToL2LaneKeepingAssistBase extends AdaptionRuleBase {
+    protected BundleContext context;
 
-    public SwitchToL2LaneKeepingAssistFromL1(BundleContext context) {
+    public SwitchToL2LaneKeepingAssistBase(BundleContext context) {
         this.context = context;
     }
 
@@ -78,20 +77,12 @@ public class SwitchToL2LaneKeepingAssistFromL1 extends AdaptionRuleBase {
         l2DrivingService.startDriving();
     }
 
-    private boolean evaluateRuleCondition(
+    protected abstract boolean evaluateRuleCondition(
         CurrentDrivingServiceStatus currentDrivingServiceStatus,
         LineSensorsHealthStatus leftLineSensorsHealthStatus,
         LineSensorsHealthStatus rightLineSensorsHealthStatus,
         RoadContext roadContext,
-        SteeringHealthStatus steeringHealthStatus)
-    {
-        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L1
-                && leftLineSensorsHealthStatus.isAvailable()
-                && rightLineSensorsHealthStatus.isAvailable()
-                && (roadContext.getType() == ERoadType.STD_ROAD
-                    || roadContext.getType() == ERoadType.CITY)
-                && steeringHealthStatus.isAvailable();
-    }
+        SteeringHealthStatus steeringHealthStatus);
 
     private IL2_LaneKeepingAssist initializeL2LaneKeepingAssist() {
         L2_LaneKeepingAssist laneKeepingAssist = new L2_LaneKeepingAssist(context, "L2_LaneKeepingAssist");
