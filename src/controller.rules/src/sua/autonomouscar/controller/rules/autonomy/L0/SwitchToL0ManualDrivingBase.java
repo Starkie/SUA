@@ -1,4 +1,4 @@
-package sua.autonomouscar.controller.rules;
+package sua.autonomouscar.controller.rules.autonomy.L0;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -6,6 +6,7 @@ import org.osgi.framework.ServiceReference;
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
+import sua.autonomouscar.controller.rules.AdaptionRuleBase;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
@@ -13,25 +14,21 @@ import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL0_DrivingService;
 import sua.autonomouscar.driving.interfaces.IL0_ManualDriving;
-import sua.autonomouscar.driving.interfaces.IL1_DrivingService;
 import sua.autonomouscar.driving.l0.manual.L0_ManualDriving;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
 
 /**
- * Rule to switch from an active {@link IL1_DrivingService} to a {@link IL0_DrivingService} if any of the required sensors stops being available.
+ * Rule to switch from an active {@link IDrivingService} to a {@link IL0_DrivingService} if any of the required sensors stops being available.
  */
-public class SwitchToL0ManualDrivingFromL1 extends AdaptionRuleBase {
+public abstract class SwitchToL0ManualDrivingBase extends AdaptionRuleBase {
 
-	private BundleContext context;
+	protected BundleContext context;
 
-	public SwitchToL0ManualDrivingFromL1(BundleContext context) {
+	public SwitchToL0ManualDrivingBase(BundleContext context) {
 		this.context = context;
 	}
 
-	/**
-	 * The condition to execute the rule: currentDrivingService instanceof IL1_DrivingService && is-driver-ready && !(are-line-sensors-available && (is-front-distance-sensor-available || is-lidar-available)
-	 */
 	@Override
 	public void evaluateAndExecute() {
 	    CurrentDrivingServiceStatus currentDrivingServiceStatus = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
