@@ -10,6 +10,7 @@ import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.infrastructure.OSGiUtils;
+import sua.autonomouscar.infrastructure.Thing;
 
 public class DistanceSensorHealthCheckProbe implements IProbe<IDistanceSensor>, ServiceListener {
 
@@ -44,7 +45,10 @@ public class DistanceSensorHealthCheckProbe implements IProbe<IDistanceSensor>, 
         {
             return;
         }
-
+        
+        String id = component != null ? ((Thing)component).getId() : null;
+        
+        distanceSensorsHealthMonitor.registerBestDistanceSensorAvailable(id);
         distanceSensorsHealthMonitor.registerHealthCheck(component != null);
     }
 }

@@ -28,4 +28,16 @@ public class DistanceSensorsHealthMonitor implements IHealthMonitor
             distanceSensorsHealthStatus.setIsAvailable(isDistanceSensorAvailable);
         }
     }
+    
+    public void registerBestDistanceSensorAvailable(String distanceSensorId)
+    {
+        DistanceSensorHealthStatus distanceSensorsHealthStatus = OSGiUtils.getService(context, DistanceSensorHealthStatus.class, String.format("(%s=%s)", "position", this.position));
+
+        // Only update it if the value has changed.
+        if (distanceSensorsHealthStatus != null && distanceSensorsHealthStatus.getBestDistanceSensorId() != distanceSensorId) {
+            System.out.println("[ Distance Sensor Health Monitor ] -  Updating the best available component of the " + this.position + " sensor to '" + distanceSensorId + "'");
+
+            distanceSensorsHealthStatus.setBestDistanceSensorId(distanceSensorId);
+        }        
+    }
 }
