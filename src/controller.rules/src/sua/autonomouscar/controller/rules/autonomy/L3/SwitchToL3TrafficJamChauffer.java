@@ -29,7 +29,7 @@ public abstract class SwitchToL3TrafficJamChauffer extends AdaptionRuleBase {
 
     protected BundleContext context;
 
-    public SwitchToL3TrafficJamChauffer(BundleContext context) {
+    protected SwitchToL3TrafficJamChauffer(BundleContext context) {
         this.context = context;
     }
 
