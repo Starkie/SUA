@@ -11,6 +11,10 @@ import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3CityChauffer;
+import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3HighwayChauffer;
+import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3TrafficJamChaufferFromL2;
+import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3TrafficJamChaufferFromL3;
 import sua.autonomouscar.infrastructure.devices.Steering;
 
 public class Activator implements BundleActivator {
@@ -26,9 +30,10 @@ public class Activator implements BundleActivator {
 	private SwitchToL1AssistedDrivingFromL0Rule switchToL1AssistedDrivingFromL0Rule;
     private SwitchToL2AdaptiveCruiseControlFromL1Rule swithToL2AdaptiveCruiseControlFromL1Rule;
     private SwitchToL2LaneKeepingAssistFromL1 swithToL2LaneKeepingAssistFromL1Rule;
-    private SwitchToL3CityChaufferFromL2Rule swithToL3CityChaufferFromL2Rule;
-    private SwitchToL3HighwayChaufferFromL2Rule swithToL3HighwayChaufferFromL2Rule;
-    private SwitchToL3TrafficJamChaufferFromL2Rule swithToL3TrafficJamChaufferFromL2Rule;
+    private SwitchToL3CityChauffer swithToL3CityChauffer;
+    private SwitchToL3HighwayChauffer swithToL3HighwayChauffer;
+    private SwitchToL3TrafficJamChaufferFromL2 swithToL3TrafficJamChaufferFromL2;
+    private SwitchToL3TrafficJamChaufferFromL3 swithToL3TrafficJamChaufferFromL3;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -53,7 +58,7 @@ public class Activator implements BundleActivator {
         String swithToL2LaneFromL1Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, RoadContext.class, Steering.class);
         context.addServiceListener(this.swithToL2LaneKeepingAssistFromL1Rule, swithToL2LaneFromL1Filter);
 
-        String swithToL3FromL2RuleFilter = createFilter(
+        String swithToL3RuleFilter = createFilter(
                 CurrentDrivingServiceStatus.class,
                 DistanceSensorHealthStatus.class,
                 EngineHealthStatus.class,
@@ -64,14 +69,17 @@ public class Activator implements BundleActivator {
                 RoadContext.class,
                 Steering.class);
 
-        this.swithToL3CityChaufferFromL2Rule = new SwitchToL3CityChaufferFromL2Rule(context);
-        context.addServiceListener(this.swithToL3CityChaufferFromL2Rule, swithToL3FromL2RuleFilter);
+        this.swithToL3CityChauffer = new SwitchToL3CityChauffer(context);
+        context.addServiceListener(this.swithToL3CityChauffer, swithToL3RuleFilter);
 
-        this.swithToL3HighwayChaufferFromL2Rule = new SwitchToL3HighwayChaufferFromL2Rule(context);
-        context.addServiceListener(this.swithToL3HighwayChaufferFromL2Rule, swithToL3FromL2RuleFilter);
-        
-        this.swithToL3TrafficJamChaufferFromL2Rule = new SwitchToL3TrafficJamChaufferFromL2Rule(context);
-        context.addServiceListener(this.swithToL3TrafficJamChaufferFromL2Rule, swithToL3FromL2RuleFilter);
+        this.swithToL3HighwayChauffer = new SwitchToL3HighwayChauffer(context);
+        context.addServiceListener(this.swithToL3HighwayChauffer, swithToL3RuleFilter);
+
+        this.swithToL3TrafficJamChaufferFromL2 = new SwitchToL3TrafficJamChaufferFromL2(context);
+        context.addServiceListener(this.swithToL3TrafficJamChaufferFromL2, swithToL3RuleFilter);
+
+        this.swithToL3TrafficJamChaufferFromL3 = new SwitchToL3TrafficJamChaufferFromL3(context);
+        context.addServiceListener(this.swithToL3TrafficJamChaufferFromL3, swithToL3RuleFilter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -87,14 +95,17 @@ public class Activator implements BundleActivator {
 	    context.removeServiceListener(this.swithToL2AdaptiveCruiseControlFromL1Rule);
 	    this.swithToL2AdaptiveCruiseControlFromL1Rule = null;
 
-	    context.removeServiceListener(this.swithToL3CityChaufferFromL2Rule);
-        this.swithToL3CityChaufferFromL2Rule = null;
+	    context.removeServiceListener(this.swithToL3CityChauffer);
+        this.swithToL3CityChauffer = null;
 
-        context.removeServiceListener(this.swithToL3HighwayChaufferFromL2Rule);
-        this.swithToL3HighwayChaufferFromL2Rule = null;
-        
-        context.removeServiceListener(this.swithToL3TrafficJamChaufferFromL2Rule);
-        this.swithToL3TrafficJamChaufferFromL2Rule = null;
+        context.removeServiceListener(this.swithToL3HighwayChauffer);
+        this.swithToL3HighwayChauffer = null;
+
+        context.removeServiceListener(this.swithToL3TrafficJamChaufferFromL2);
+        this.swithToL3TrafficJamChaufferFromL2 = null;
+
+        context.removeServiceListener(this.swithToL3TrafficJamChaufferFromL3);
+        this.swithToL3TrafficJamChaufferFromL3 = null;
 
 		Activator.context = null;
 	}
