@@ -16,9 +16,6 @@ import sua.autonomouscar.interfaces.ERoadType;
  * Rule to switch from an active {@link IL3_DrivingService} to a {@link IL0_DrivingService} if any of the required sensors stops being available.
  */
 public class SwitchToL0ManualDrivingFromL3Rule extends SwitchToL0ManualDrivingBase {
-
-	private BundleContext context;
-
 	public SwitchToL0ManualDrivingFromL3Rule(BundleContext context) {
 		super(context);
 	}

@@ -7,13 +7,13 @@ import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.driving.interfaces.IL0_DrivingService;
-import sua.autonomouscar.driving.interfaces.IL1_DrivingService;
+import sua.autonomouscar.driving.interfaces.IL2_DrivingService;
 
 /**
- * Rule to switch from an active {@link IL1_DrivingService} to a {@link IL0_DrivingService} if any of the required sensors stops being available.
+ * Rule to switch from an active {@link IL2_DrivingService} to a {@link IL0_DrivingService} if any of the required sensors stops being available.
  */
-public class SwitchToL0ManualDrivingFromL1Rule extends SwitchToL0ManualDrivingBase {
-	public SwitchToL0ManualDrivingFromL1Rule(BundleContext context) {
+public class SwitchToL0ManualDrivingFromL2LaneKeepingAssistRule extends SwitchToL0ManualDrivingBase {
+	public SwitchToL0ManualDrivingFromL2LaneKeepingAssistRule(BundleContext context) {
 		super(context);
 	}
 
@@ -23,12 +23,11 @@ public class SwitchToL0ManualDrivingFromL1Rule extends SwitchToL0ManualDrivingBa
         LineSensorsHealthStatus leftLineSensorsHealthStatus,
         LineSensorsHealthStatus rightLineSensorsHealthStatus)
     {
-        // If the current autonomy level is L1 and any of the sensors is not available.
-        boolean oneOrMoreSensorsUnavailable = !frontDistanceSensorHealthStatus.isAvailable()
-            || !leftLineSensorsHealthStatus.isAvailable()
-            || !rightLineSensorsHealthStatus.isAvailable();
+        // If the current autonomy level is L2_LaneKeepingAssist and any of the sensors is not available.
+        boolean oneOrMoreSensorsUnavailable =!leftLineSensorsHealthStatus.isAvailable()
+                || !rightLineSensorsHealthStatus.isAvailable();
 
-        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L1
+        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L2
                 && oneOrMoreSensorsUnavailable;
     }
 }
