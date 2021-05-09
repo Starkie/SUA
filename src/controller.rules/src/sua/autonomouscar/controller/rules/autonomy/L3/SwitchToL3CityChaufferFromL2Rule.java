@@ -1,10 +1,11 @@
-package sua.autonomouscar.controller.rules;
+package sua.autonomouscar.controller.rules.autonomy.L3;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.controller.rules.AdaptionRuleBase;
 import sua.autonomouscar.controller.rules.utils.L3ConfigurationUtils;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
@@ -17,15 +18,15 @@ import sua.autonomouscar.infrastructure.Thing;
 import sua.autonomouscar.interfaces.ERoadType;
 
 /**
- * This rule changes the autonomous driving module from {@link IL2_DrivingService} to {@link IL3_CityChauffer}.
+ * This rule changes the autonomous driving module to {@link IL3_CityChauffer}.
  */
 public class SwitchToL3CityChaufferFromL2Rule extends AdaptionRuleBase {
     // The default lateral security distance is of 2.5m (250 cm).
     private static final int LATERAL_SECURITY_DISTANCE = 250;
-    
+
     // The default longitudinal security distance is of 2m (200 cm).
     private static final int LONGITUDINAL_SECURITY_DISTANCE = 200;
-    
+
     // The reference speed is of 40km/h.
     private static final int REFERENCE_SPEED = 40;
 
@@ -39,7 +40,7 @@ public class SwitchToL3CityChaufferFromL2Rule extends AdaptionRuleBase {
     public void evaluateAndExecute() {
         CurrentDrivingServiceStatus currentDrivingServiceStatus = OSGiUtils.getService(context, CurrentDrivingServiceStatus.class);
         RoadContext roadContext = OSGiUtils.getService(context, RoadContext.class);
-        
+
         // TODO: ¿Add the is driver ready?
         if (currentDrivingServiceStatus == null
                 || roadContext == null
@@ -67,9 +68,9 @@ public class SwitchToL3CityChaufferFromL2Rule extends AdaptionRuleBase {
 
         L3ConfigurationUtils.configureL3DrivingService(
             l3DrivingService,
-            this.context, 
-            REFERENCE_SPEED, 
-            LATERAL_SECURITY_DISTANCE, 
+            this.context,
+            REFERENCE_SPEED,
+            LATERAL_SECURITY_DISTANCE,
             LONGITUDINAL_SECURITY_DISTANCE);
 
         // Unregister the current driving service and replace it with the L3_CityChauffer.
@@ -83,15 +84,25 @@ public class SwitchToL3CityChaufferFromL2Rule extends AdaptionRuleBase {
 
     private boolean evaluateRuleCondition(
             CurrentDrivingServiceStatus currentDrivingServiceStatus,
-            RoadContext roadContext) 
+            RoadContext roadContext)
     {
-        // All the L3 required services must be available, the autonomy level must be L2 
-        // and the current road type must be CITY.
+        // All the L3 required services must be available.
         boolean areAllServicesAvailable = L3ConfigurationUtils.areAllL3RequiredServicesAvailable(this.context);
-        
-        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L2
-            && roadContext.getType() == ERoadType.CITY
-            && areAllServicesAvailable;
+
+        // The current autonomy level must be L2, or L3 but not of the L3_CityChauffer.
+        DrivingAutonomyLevel autonomyLevel = currentDrivingServiceStatus.getAutonomyLevel();
+
+        boolean canSwitchFromCurrentDrivingService =
+                autonomyLevel == DrivingAutonomyLevel.L2
+                || (autonomyLevel == DrivingAutonomyLevel.L3
+                    && !currentDrivingServiceStatus.getDrivingServiceClass().isInstance(L3_CityChauffer.class));
+
+        // the road type must be City.
+        boolean roadType = roadContext.getType() == ERoadType.CITY;
+
+        return canSwitchFromCurrentDrivingService
+            && areAllServicesAvailable
+            && roadType;
     }
 
 
