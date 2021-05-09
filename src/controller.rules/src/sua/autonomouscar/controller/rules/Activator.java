@@ -11,6 +11,8 @@ import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
+import sua.autonomouscar.controller.rules.autonomy.L1.SwitchToL1AssistedDrivingFromL0Rule;
+import sua.autonomouscar.controller.rules.autonomy.L1.SwitchToL1AssistedDrivingFromL3Rule;
 import sua.autonomouscar.controller.rules.autonomy.L2.SwitchToL2LaneKeepingAssistFromL1;
 import sua.autonomouscar.controller.rules.autonomy.L2.SwitchToL2LaneKeepingAssistFromL3;
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3CityChauffer;
@@ -30,13 +32,14 @@ public class Activator implements BundleActivator {
 	private EnableNotificationsInL1Rule enableNotificationsInL1Rule;
 	private SwitchToL0ManualDrivingFromL1 switchToL0ManualDrivingFromL1;
 	private SwitchToL1AssistedDrivingFromL0Rule switchToL1AssistedDrivingFromL0Rule;
+	private SwitchToL1AssistedDrivingFromL3Rule switchToL1AssistedDrivingFromL3Rule;
     private SwitchToL2AdaptiveCruiseControlFromL1Rule switchToL2AdaptiveCruiseControlFromL1Rule;
     private SwitchToL2LaneKeepingAssistFromL1 switchToL2LaneKeepingAssistFromL1Rule;
+    private SwitchToL2LaneKeepingAssistFromL3 switchToL2LaneKeepingAssistFromL3Rule;
     private SwitchToL3CityChauffer swithToL3CityChauffer;
     private SwitchToL3HighwayChauffer swithToL3HighwayChauffer;
     private SwitchToL3TrafficJamChaufferFromL2 swithToL3TrafficJamChaufferFromL2;
     private SwitchToL3TrafficJamChaufferFromL3 swithToL3TrafficJamChaufferFromL3;
-    private SwitchToL2LaneKeepingAssistFromL3 switchToL2LaneKeepingAssistFromL3Rule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -52,6 +55,10 @@ public class Activator implements BundleActivator {
 		this.switchToL1AssistedDrivingFromL0Rule = new SwitchToL1AssistedDrivingFromL0Rule(context);
         String swithToL1FromL0Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class);
         context.addServiceListener(this.switchToL1AssistedDrivingFromL0Rule, swithToL1FromL0Filter);
+
+        this.switchToL1AssistedDrivingFromL3Rule = new SwitchToL1AssistedDrivingFromL3Rule(context);
+        String swithToL1FromL3Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class, RoadContext.class);
+        context.addServiceListener(this.switchToL1AssistedDrivingFromL3Rule, swithToL1FromL3Filter);
 
         this.switchToL2AdaptiveCruiseControlFromL1Rule = new SwitchToL2AdaptiveCruiseControlFromL1Rule(context);
         String swithToL2AccFromL1Filter = createFilter(RoadContext.class, CurrentDrivingServiceStatus.class, EngineHealthStatus.class, DistanceSensorHealthStatus.class);
@@ -97,6 +104,9 @@ public class Activator implements BundleActivator {
 
 	    context.removeServiceListener(this.switchToL1AssistedDrivingFromL0Rule);
         this.switchToL1AssistedDrivingFromL0Rule = null;
+
+        context.removeServiceListener(this.switchToL1AssistedDrivingFromL3Rule);
+        this.switchToL1AssistedDrivingFromL3Rule = null;
 
 	    context.removeServiceListener(this.switchToL2AdaptiveCruiseControlFromL1Rule);
 	    this.switchToL2AdaptiveCruiseControlFromL1Rule = null;

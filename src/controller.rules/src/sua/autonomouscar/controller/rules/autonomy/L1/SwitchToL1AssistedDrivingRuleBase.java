@@ -1,4 +1,4 @@
-package sua.autonomouscar.controller.rules;
+package sua.autonomouscar.controller.rules.autonomy.L1;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -6,6 +6,7 @@ import org.osgi.framework.ServiceReference;
 import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
+import sua.autonomouscar.controller.rules.AdaptionRuleBase;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
@@ -23,13 +24,13 @@ import sua.autonomouscar.infrastructure.Thing;
 /**
  * Rule to switch from an active {@link IL0_DrivingService} to a {@link IL1_DrivingService} if all the required sensors are available.
  */
-public class SwitchToL1AssistedDrivingFromL0Rule extends AdaptionRuleBase {
+public abstract class SwitchToL1AssistedDrivingRuleBase extends AdaptionRuleBase {
     // The default longitudinal security distance is of 100m (10000 cm).
     private static final int LONGITUDINAL_SECURITY_DISTANCE = 10000;
 
-	private BundleContext context;
+	protected BundleContext context;
 
-	public SwitchToL1AssistedDrivingFromL0Rule(BundleContext context) {
+	public SwitchToL1AssistedDrivingRuleBase(BundleContext context) {
 		this.context = context;
 	}
 
@@ -87,10 +88,12 @@ public class SwitchToL1AssistedDrivingFromL0Rule extends AdaptionRuleBase {
 	}
 
     private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus) {
+        boolean areLineSensorsAvailable = leftLineSensorsHealthStatus.isAvailable()
+            && rightLineSensorsHealthStatus.isAvailable();
+
         return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L0
-                && frontDistanceSensorHealthStatus.isAvailable()
-                && leftLineSensorsHealthStatus.isAvailable()
-                && rightLineSensorsHealthStatus.isAvailable();
+            && frontDistanceSensorHealthStatus.isAvailable()
+            && areLineSensorsAvailable;
     }
 
     private IL1_AssistedDriving initializeL1AssistedDriving() {
