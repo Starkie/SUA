@@ -24,6 +24,8 @@ import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3CityChauffer;
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3HighwayChauffer;
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3TrafficJamChaufferFromL2;
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3TrafficJamChaufferFromL3;
+import sua.autonomouscar.controller.rules.configuration.ReplaceDistanceSensorRuleBase;
+import sua.autonomouscar.controller.rules.configuration.ReplaceFrontDistanceSensorRule;
 import sua.autonomouscar.infrastructure.devices.Steering;
 
 public class Activator implements BundleActivator {
@@ -48,13 +50,15 @@ public class Activator implements BundleActivator {
     private SwitchToL0ManualDrivingFromL3Rule switchToL0ManualDrivingFromL3;
     private SwitchToL0ManualDrivingFromL2AdaptiveCruiseControlRule switchToL0ManualDrivingFromL2AdaptiveCruiseControlRule;
     private SwitchToL0ManualDrivingFromL2LaneKeepingAssistRule switchToL0ManualDrivingFromL2LaneKeepingAssistRule;
+    private ReplaceDistanceSensorRuleBase switchFrontDistanceSensorRule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 
+
 		this.enableNotificationsInL1Rule = new EnableNotificationsInL1Rule(bundleContext);
 		String enableNotificationSystemInL1ServiceFilter = createFilter(CurrentDrivingServiceStatus.class, NotificationServiceHealthStatus.class);
-		context.addServiceListener(enableNotificationsInL1Rule, enableNotificationSystemInL1ServiceFilter);
+		context.addServiceListener(this.enableNotificationsInL1Rule, enableNotificationSystemInL1ServiceFilter);
 
 		this.switchToL0ManualDrivingFromL1 = new SwitchToL0ManualDrivingFromL1Rule(context);
 		String swithToL0FromL1Filter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, DistanceSensorHealthStatus.class);
@@ -90,6 +94,10 @@ public class Activator implements BundleActivator {
         this.switchToL2LaneKeepingAssistFromL3Rule = new SwitchToL2LaneKeepingAssistFromL3(context);
         context.addServiceListener(this.switchToL2LaneKeepingAssistFromL3Rule, swithToL2LaneFilter);
 
+        this.switchFrontDistanceSensorRule = new ReplaceFrontDistanceSensorRule(bundleContext);
+        String switchDistanceSensorRuleServiceFilter = createFilter(CurrentDrivingServiceStatus.class, DistanceSensorHealthStatus.class);
+        context.addServiceListener(this.switchFrontDistanceSensorRule, switchDistanceSensorRuleServiceFilter);
+
         String swithToL3RuleFilter = createFilter(
                 CurrentDrivingServiceStatus.class,
                 DistanceSensorHealthStatus.class,
@@ -117,6 +125,9 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext bundleContext) throws Exception {
 	    context.removeServiceListener(this.enableNotificationsInL1Rule);
 	    this.enableNotificationsInL1Rule = null;
+
+	    context.removeServiceListener(this.switchFrontDistanceSensorRule);
+        this.switchFrontDistanceSensorRule = null;
 
 	    context.removeServiceListener(this.switchToL0ManualDrivingFromL1);
         this.switchToL0ManualDrivingFromL1 = null;
