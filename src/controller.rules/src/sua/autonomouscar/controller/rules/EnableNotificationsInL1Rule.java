@@ -35,7 +35,13 @@ public class EnableNotificationsInL1Rule extends AdaptionRuleBase {
         }
 
 		IL1_DrivingService l1DrivingService = (IL1_DrivingService) AutonomousVehicleContextUtils.findCurrentDrivingService(context);
-
+		
+		if (l1DrivingService == null)
+		{
+		    // Have we tried to execute the rule while the driving service was switching?
+		    return;
+		}
+		
 		INotificationService notificationService = OSGiUtils.getService(context, INotificationService.class);
 
 		if (notificationService == null)
