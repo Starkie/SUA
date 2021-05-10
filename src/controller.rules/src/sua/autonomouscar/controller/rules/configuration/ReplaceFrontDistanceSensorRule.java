@@ -35,6 +35,7 @@ public class ReplaceFrontDistanceSensorRule extends ReplaceDistanceSensorRuleBas
         }
     }
 
+    @Override
     protected boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus) {
         // L0_ManualDriving and L2_LaneKeepingAssist are the only driving modes that do not
         // require a front distance sensor. The fallback plans only use the right sensor.

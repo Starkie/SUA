@@ -26,6 +26,9 @@ import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3TrafficJamChauff
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3TrafficJamChaufferFromL3;
 import sua.autonomouscar.controller.rules.configuration.ReplaceDistanceSensorRuleBase;
 import sua.autonomouscar.controller.rules.configuration.ReplaceFrontDistanceSensorRule;
+import sua.autonomouscar.controller.rules.configuration.ReplaceLeftDistanceSensorRule;
+import sua.autonomouscar.controller.rules.configuration.ReplaceRearDistanceSensorRule;
+import sua.autonomouscar.controller.rules.configuration.ReplaceRightDistanceSensorRule;
 import sua.autonomouscar.infrastructure.devices.Steering;
 
 public class Activator implements BundleActivator {
@@ -50,7 +53,10 @@ public class Activator implements BundleActivator {
     private SwitchToL0ManualDrivingFromL3Rule switchToL0ManualDrivingFromL3;
     private SwitchToL0ManualDrivingFromL2AdaptiveCruiseControlRule switchToL0ManualDrivingFromL2AdaptiveCruiseControlRule;
     private SwitchToL0ManualDrivingFromL2LaneKeepingAssistRule switchToL0ManualDrivingFromL2LaneKeepingAssistRule;
-    private ReplaceDistanceSensorRuleBase switchFrontDistanceSensorRule;
+    private ReplaceFrontDistanceSensorRule replaceFrontDistanceSensorRule;
+    private ReplaceLeftDistanceSensorRule replaceLeftDistanceSensorRule;
+    private ReplaceRightDistanceSensorRule replaceRightDistanceSensorRule;
+    private ReplaceRearDistanceSensorRule replaceRearDistanceSensorRule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -94,9 +100,18 @@ public class Activator implements BundleActivator {
         this.switchToL2LaneKeepingAssistFromL3Rule = new SwitchToL2LaneKeepingAssistFromL3(context);
         context.addServiceListener(this.switchToL2LaneKeepingAssistFromL3Rule, swithToL2LaneFilter);
 
-        this.switchFrontDistanceSensorRule = new ReplaceFrontDistanceSensorRule(bundleContext);
-        String switchDistanceSensorRuleServiceFilter = createFilter(CurrentDrivingServiceStatus.class, DistanceSensorHealthStatus.class);
-        context.addServiceListener(this.switchFrontDistanceSensorRule, switchDistanceSensorRuleServiceFilter);
+        this.replaceFrontDistanceSensorRule = new ReplaceFrontDistanceSensorRule(bundleContext);
+        String replaceDistanceSensorRuleServiceFilter = createFilter(CurrentDrivingServiceStatus.class, DistanceSensorHealthStatus.class);
+        context.addServiceListener(this.replaceFrontDistanceSensorRule, replaceDistanceSensorRuleServiceFilter);
+
+        this.replaceLeftDistanceSensorRule = new ReplaceLeftDistanceSensorRule(bundleContext);
+        context.addServiceListener(this.replaceLeftDistanceSensorRule, replaceDistanceSensorRuleServiceFilter);
+
+        this.replaceRightDistanceSensorRule = new ReplaceRightDistanceSensorRule(bundleContext);
+        context.addServiceListener(this.replaceRightDistanceSensorRule, replaceDistanceSensorRuleServiceFilter);
+
+        this.replaceRearDistanceSensorRule = new ReplaceRearDistanceSensorRule(bundleContext);
+        context.addServiceListener(this.replaceRearDistanceSensorRule, replaceDistanceSensorRuleServiceFilter);
 
         String swithToL3RuleFilter = createFilter(
                 CurrentDrivingServiceStatus.class,
@@ -126,8 +141,17 @@ public class Activator implements BundleActivator {
 	    context.removeServiceListener(this.enableNotificationsInL1Rule);
 	    this.enableNotificationsInL1Rule = null;
 
-	    context.removeServiceListener(this.switchFrontDistanceSensorRule);
-        this.switchFrontDistanceSensorRule = null;
+	    context.removeServiceListener(this.replaceFrontDistanceSensorRule);
+        this.replaceFrontDistanceSensorRule = null;
+
+        context.removeServiceListener(this.replaceLeftDistanceSensorRule);
+        this.replaceLeftDistanceSensorRule = null;
+
+        context.removeServiceListener(this.replaceRightDistanceSensorRule);
+        this.replaceRightDistanceSensorRule = null;
+
+        context.removeServiceListener(this.replaceRearDistanceSensorRule);
+        this.replaceRearDistanceSensorRule = null;
 
 	    context.removeServiceListener(this.switchToL0ManualDrivingFromL1);
         this.switchToL0ManualDrivingFromL1 = null;

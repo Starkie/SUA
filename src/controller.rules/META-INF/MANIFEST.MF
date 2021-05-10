@@ -17,4 +17,5 @@ Require-Bundle: AutonomousCar.interfaces,
  driving.L2.LaneKeepingAssist,
  driving.L3.CityChauffer,
  driving.L3.HighwayChauffer,
- driving.L3.TrafficJamChauffer
+ driving.L3.TrafficJamChauffer,
+ driving.FallbackPlan.ParkInTheRoadShoulder
