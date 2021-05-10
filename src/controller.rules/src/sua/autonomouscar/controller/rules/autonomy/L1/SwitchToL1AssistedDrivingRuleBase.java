@@ -85,6 +85,9 @@ public abstract class SwitchToL1AssistedDrivingRuleBase extends AdaptionRuleBase
 		}
 
 		l1DrivingService.startDriving();
+
+		// Update the distance sensor properties.
+		frontDistanceSensorHealthStatus.setActiveDistanceSensorId(((Thing)distanceSensor).getId());
 	}
 
     private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus) {

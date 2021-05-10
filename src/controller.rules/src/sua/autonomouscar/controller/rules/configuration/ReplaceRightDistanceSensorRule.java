@@ -25,6 +25,8 @@ public class ReplaceRightDistanceSensorRule extends ReplaceDistanceSensorRuleBas
     @Override
     protected void replaceDistanceSensor(IDrivingService currentDrivingService, DistanceSensorHealthStatus distanceSensorHealthStatus)
     {
+        String sensorId = distanceSensorHealthStatus.getBestDistanceSensorId();
+
         // No common class exists between L3_DrivingService and ParkInTheRoadShoulder that accepts a
         // right distance sensor. Each must be treated separately.
         if (currentDrivingService instanceof L3_DrivingService)
@@ -33,7 +35,8 @@ public class ReplaceRightDistanceSensorRule extends ReplaceDistanceSensorRuleBas
 
             if (drivingService != null)
             {
-                drivingService.setRearDistanceSensor(distanceSensorHealthStatus.getBestDistanceSensorId());
+                drivingService.setRearDistanceSensor(sensorId);
+                distanceSensorHealthStatus.setActiveDistanceSensorId(sensorId);
             }
         }
         else if (currentDrivingService instanceof ParkInTheRoadShoulderFallbackPlan)
@@ -42,7 +45,8 @@ public class ReplaceRightDistanceSensorRule extends ReplaceDistanceSensorRuleBas
 
             if (fallbackPlan != null)
             {
-                fallbackPlan.setRightDistanceSensor(distanceSensorHealthStatus.getBestDistanceSensorId());
+                fallbackPlan.setRightDistanceSensor(sensorId);
+                distanceSensorHealthStatus.setActiveDistanceSensorId(sensorId);
             }
         }
     }
@@ -56,6 +60,7 @@ public class ReplaceRightDistanceSensorRule extends ReplaceDistanceSensorRuleBas
                 || currentDrivingServiceStatus.getClass().isInstance(ParkInTheRoadShoulderFallbackPlan.class));
 
         return rightDistanceSensorHealthStatus.isAvailable()
+            && rightDistanceSensorHealthStatus.getActiveDistanceSensorId() != rightDistanceSensorHealthStatus.getBestDistanceSensorId()
             && isDrivingServiceWithRightDistanceSensor;
     }
 }

@@ -30,7 +30,10 @@ public class ReplaceLeftDistanceSensorRule extends ReplaceDistanceSensorRuleBase
 
         if (drivingService != null)
         {
-            drivingService.setLeftDistanceSensor(distanceSensorHealthStatus.getBestDistanceSensorId());
+            String sensorId = distanceSensorHealthStatus.getBestDistanceSensorId();
+
+            drivingService.setLeftDistanceSensor(sensorId);
+            distanceSensorHealthStatus.setActiveDistanceSensorId(sensorId);
         }
     }
 
@@ -42,6 +45,7 @@ public class ReplaceLeftDistanceSensorRule extends ReplaceDistanceSensorRuleBase
                 && currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L3;
 
         return leftDistanceSensorHealthStatus.isAvailable()
+            && leftDistanceSensorHealthStatus.getActiveDistanceSensorId() != leftDistanceSensorHealthStatus.getBestDistanceSensorId()
             && isDrivingServiceWithLeftDistanceSensor;
     }
 }

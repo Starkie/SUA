@@ -81,6 +81,9 @@ public class SwitchToL2AdaptiveCruiseControlFromL1Rule extends AdaptionRuleBase 
         }
 
         l2DrivingService.startDriving();
+
+        // Update the distance sensor properties.
+        frontDistanceSensorHealthStatus.setActiveDistanceSensorId(((Thing)distanceSensor).getId());
     }
 
     private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, RoadContext roadContext, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, EngineHealthStatus engineHealthStatus) {

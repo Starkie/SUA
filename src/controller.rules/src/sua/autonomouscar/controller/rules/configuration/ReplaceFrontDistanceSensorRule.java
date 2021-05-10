@@ -31,7 +31,10 @@ public class ReplaceFrontDistanceSensorRule extends ReplaceDistanceSensorRuleBas
 
         if (drivingService != null)
         {
-            drivingService.setFrontDistanceSensor(distanceSensorHealthStatus.getBestDistanceSensorId());
+            String sensorId = distanceSensorHealthStatus.getBestDistanceSensorId();
+
+            drivingService.setFrontDistanceSensor(sensorId);
+            distanceSensorHealthStatus.setActiveDistanceSensorId(sensorId);
         }
     }
 
@@ -46,6 +49,7 @@ public class ReplaceFrontDistanceSensorRule extends ReplaceDistanceSensorRuleBas
                 && !currentDrivingServiceStatus.getClass().isInstance(IFallbackPlan.class);
 
         return frontDistanceSensorHealthStatus.isAvailable()
+            && frontDistanceSensorHealthStatus.getActiveDistanceSensorId() != frontDistanceSensorHealthStatus.getBestDistanceSensorId()
             && isDrivingServiceWithFrontDistanceSensor;
     }
 }
