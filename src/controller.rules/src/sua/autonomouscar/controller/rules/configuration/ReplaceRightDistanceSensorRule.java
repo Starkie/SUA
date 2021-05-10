@@ -57,7 +57,7 @@ public class ReplaceRightDistanceSensorRule extends ReplaceDistanceSensorRuleBas
         boolean isDrivingServiceWithRightDistanceSensor =
             currentDrivingServiceStatus.getClass() != null
             && (currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L3
-                || currentDrivingServiceStatus.getClass().isInstance(ParkInTheRoadShoulderFallbackPlan.class));
+                || ParkInTheRoadShoulderFallbackPlan.class.isAssignableFrom(currentDrivingServiceStatus.getClass()));
 
         return rightDistanceSensorHealthStatus.isAvailable()
             && rightDistanceSensorHealthStatus.getActiveDistanceSensorId() != rightDistanceSensorHealthStatus.getBestDistanceSensorId()

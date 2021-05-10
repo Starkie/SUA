@@ -31,7 +31,7 @@ public class SwitchToL3TrafficJamChaufferFromL3 extends SwitchToL3TrafficJamChau
         DrivingAutonomyLevel autonomyLevel = currentDrivingServiceStatus.getAutonomyLevel();
 
         boolean canSwitchFromCurrentDrivingService = autonomyLevel == DrivingAutonomyLevel.L3
-            && !currentDrivingServiceStatus.getDrivingServiceClass().isInstance(L3_TrafficJamChauffer.class);
+            && !L3_TrafficJamChauffer.class.isAssignableFrom(currentDrivingServiceStatus.getDrivingServiceClass());
 
         // The road type must be highway and the status jam or collapsed.
         boolean roadTypeAndStatus = roadContext.getType() == ERoadType.HIGHWAY

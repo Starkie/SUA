@@ -96,7 +96,7 @@ public class SwitchToL3HighwayChauffer extends AdaptionRuleBase {
         boolean canSwitchFromCurrentDrivingService =
             autonomyLevel == DrivingAutonomyLevel.L2
                 || (autonomyLevel == DrivingAutonomyLevel.L3
-                    && !currentDrivingServiceStatus.getDrivingServiceClass().isInstance(L3_HighwayChauffer.class));
+                    && !L3_HighwayChauffer.class.isAssignableFrom(currentDrivingServiceStatus.getDrivingServiceClass()));
 
         // The road type must be highway and fluid.
         boolean roadTypeAndStatus = roadContext.getType() == ERoadType.HIGHWAY

@@ -13,6 +13,7 @@ import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL2_DrivingService;
 import sua.autonomouscar.driving.interfaces.IL3_CityChauffer;
 import sua.autonomouscar.driving.l3.citychauffer.L3_CityChauffer;
+import sua.autonomouscar.driving.l3.trafficjamchauffer.L3_TrafficJamChauffer;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
 import sua.autonomouscar.interfaces.ERoadType;
@@ -95,7 +96,7 @@ public class SwitchToL3CityChaufferFromL2Rule extends AdaptionRuleBase {
         boolean canSwitchFromCurrentDrivingService =
                 autonomyLevel == DrivingAutonomyLevel.L2
                 || (autonomyLevel == DrivingAutonomyLevel.L3
-                    && !currentDrivingServiceStatus.getDrivingServiceClass().isInstance(L3_CityChauffer.class));
+                    && !L3_TrafficJamChauffer.class.isAssignableFrom(currentDrivingServiceStatus.getDrivingServiceClass()));
 
         // the road type must be City.
         boolean roadType = roadContext.getType() == ERoadType.CITY;

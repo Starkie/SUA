@@ -45,8 +45,8 @@ public class ReplaceFrontDistanceSensorRule extends ReplaceDistanceSensorRuleBas
         boolean isDrivingServiceWithFrontDistanceSensor =
                 currentDrivingServiceStatus.getClass() != null
                 && currentDrivingServiceStatus.getAutonomyLevel() != DrivingAutonomyLevel.L0
-                && !currentDrivingServiceStatus.getClass().isInstance(L2_LaneKeepingAssist.class)
-                && !currentDrivingServiceStatus.getClass().isInstance(IFallbackPlan.class);
+                && !L2_LaneKeepingAssist.class.isAssignableFrom(currentDrivingServiceStatus.getClass())
+                && !IFallbackPlan.class.isAssignableFrom(currentDrivingServiceStatus.getClass());
 
         return frontDistanceSensorHealthStatus.isAvailable()
             && frontDistanceSensorHealthStatus.getActiveDistanceSensorId() != frontDistanceSensorHealthStatus.getBestDistanceSensorId()
