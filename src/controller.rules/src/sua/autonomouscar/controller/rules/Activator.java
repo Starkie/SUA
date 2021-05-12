@@ -19,6 +19,7 @@ import sua.autonomouscar.controller.rules.autonomy.L1.SwitchToL1AssistedDrivingF
 import sua.autonomouscar.controller.rules.autonomy.L1.SwitchToL1AssistedDrivingFromL3Rule;
 import sua.autonomouscar.controller.rules.autonomy.L2.SwitchToL2AdaptiveCruiseControlFromL1Rule;
 import sua.autonomouscar.controller.rules.autonomy.L2.SwitchToL2LaneKeepingAssistFromL1;
+import sua.autonomouscar.controller.rules.autonomy.L2.SwitchToL2LaneKeepingAssistFromL2;
 import sua.autonomouscar.controller.rules.autonomy.L2.SwitchToL2LaneKeepingAssistFromL3;
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3CityChaufferFromL2Rule;
 import sua.autonomouscar.controller.rules.autonomy.L3.SwitchToL3CityChaufferFromL3Rule;
@@ -60,6 +61,7 @@ public class Activator implements BundleActivator {
     private ReplaceRearDistanceSensorRule replaceRearDistanceSensorRule;
     private SwitchToL3HighwayChaufferFromL3Rule switchToL3HighwayChaufferFromL3Rule;
     private SwitchToL3CityChaufferFromL3Rule switchToL3CityChaufferFromL3Rule;
+    private SwitchToL2LaneKeepingAssistFromL2 switchToL2LaneKeepingAssistFromL2Rule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -99,6 +101,9 @@ public class Activator implements BundleActivator {
         this.switchToL2LaneKeepingAssistFromL1Rule = new SwitchToL2LaneKeepingAssistFromL1(context);
         String swithToL2LaneFilter = createFilter(CurrentDrivingServiceStatus.class, LineSensorsHealthStatus.class, RoadContext.class, Steering.class);
         context.addServiceListener(this.switchToL2LaneKeepingAssistFromL1Rule, swithToL2LaneFilter);
+
+        this.switchToL2LaneKeepingAssistFromL2Rule = new SwitchToL2LaneKeepingAssistFromL2(context);
+        context.addServiceListener(this.switchToL2LaneKeepingAssistFromL2Rule, swithToL2LaneFilter);
 
         this.switchToL2LaneKeepingAssistFromL3Rule = new SwitchToL2LaneKeepingAssistFromL3(context);
         context.addServiceListener(this.switchToL2LaneKeepingAssistFromL3Rule, swithToL2LaneFilter);
@@ -185,6 +190,9 @@ public class Activator implements BundleActivator {
 
 	    context.removeServiceListener(this.switchToL2LaneKeepingAssistFromL1Rule);
 	    this.switchToL2LaneKeepingAssistFromL1Rule = null;
+
+	    context.removeServiceListener(this.switchToL2LaneKeepingAssistFromL2Rule);
+        this.switchToL2LaneKeepingAssistFromL2Rule = null;
 
 	    context.removeServiceListener(this.switchToL2LaneKeepingAssistFromL3Rule);
         this.switchToL2LaneKeepingAssistFromL3Rule = null;
