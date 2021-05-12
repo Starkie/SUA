@@ -11,19 +11,18 @@ import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL2_DrivingService;
-import sua.autonomouscar.driving.interfaces.IL3_CityChauffer;
-import sua.autonomouscar.driving.interfaces.IL3_DrivingService;
-import sua.autonomouscar.driving.l3.citychauffer.L3_CityChauffer;
-import sua.autonomouscar.driving.l3.trafficjamchauffer.L3_TrafficJamChauffer;
+import sua.autonomouscar.driving.interfaces.IL3_HighwayChauffer;
+import sua.autonomouscar.driving.l3.highwaychauffer.L3_HighwayChauffer;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
+import sua.autonomouscar.interfaces.ERoadStatus;
 import sua.autonomouscar.interfaces.ERoadType;
 
 /**
- * This rule changes the autonomous driving module to {@link IL3_CityChauffer} from {@link IL2_DrivingService}.
+ * This rule changes the autonomous driving module to {@link IL3_HighwayChauffer}.
  */
-public class SwitchToL3CityChaufferFromL2Rule extends SwitchToL3CityChaufferRuleBase {
-    public SwitchToL3CityChaufferFromL2Rule(BundleContext context) {
+public class SwitchToL3HighwayChaufferFromL2Rule extends SwitchToL3HighwayChaufferRuleBase {
+    public SwitchToL3HighwayChaufferFromL2Rule(BundleContext context) {
         super(context);
     }
 
@@ -36,15 +35,14 @@ public class SwitchToL3CityChaufferFromL2Rule extends SwitchToL3CityChaufferRule
         boolean areAllServicesAvailable = L3ConfigurationUtils.areAllL3RequiredServicesAvailable(this.context);
 
         // The current autonomy level must be L2.
-        DrivingAutonomyLevel autonomyLevel = currentDrivingServiceStatus.getAutonomyLevel();
+        boolean canSwitchFromCurrentDrivingService = currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L2;
 
-        boolean canSwitchFromCurrentDrivingService = autonomyLevel == DrivingAutonomyLevel.L2;
-
-        // The road type must be City.
-        boolean roadType = roadContext.getType() == ERoadType.CITY;
+        // The road type must be highway and fluid.
+        boolean roadTypeAndStatus = roadContext.getType() == ERoadType.HIGHWAY
+            && roadContext.getStatus() == ERoadStatus.FLUID;
 
         return canSwitchFromCurrentDrivingService
             && areAllServicesAvailable
-            && roadType;
+            && roadTypeAndStatus;
     }
 }

@@ -6,14 +6,15 @@ import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.rules.utils.L3ConfigurationUtils;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
+import sua.autonomouscar.driving.interfaces.IL2_DrivingService;
 import sua.autonomouscar.driving.interfaces.IL3_TrafficJamChauffer;
 import sua.autonomouscar.interfaces.ERoadStatus;
 import sua.autonomouscar.interfaces.ERoadType;
 
 /**
- * This rule changes the autonomous driving module to {@link IL3_TrafficJamChauffer}.
+ * This rule changes the autonomous driving module to {@link IL3_TrafficJamChauffer} from an {@link IL2_DrivingService}.
  */
-public class SwitchToL3TrafficJamChaufferFromL2 extends SwitchToL3TrafficJamChauffer {
+public class SwitchToL3TrafficJamChaufferFromL2 extends SwitchToL3TrafficJamChaufferRuleBase {
     public SwitchToL3TrafficJamChaufferFromL2(BundleContext context) {
         super(context);
     }

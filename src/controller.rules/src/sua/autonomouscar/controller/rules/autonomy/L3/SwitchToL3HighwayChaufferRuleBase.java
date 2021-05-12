@@ -21,7 +21,7 @@ import sua.autonomouscar.interfaces.ERoadType;
 /**
  * This rule changes the autonomous driving module to {@link IL3_HighwayChauffer}.
  */
-public class SwitchToL3HighwayChauffer extends AdaptionRuleBase {
+abstract class SwitchToL3HighwayChaufferRuleBase extends AdaptionRuleBase {
     // The default lateral security distance is of 2.5m (250 cm).
     private static final int LATERAL_SECURITY_DISTANCE = 250;
 
@@ -31,9 +31,9 @@ public class SwitchToL3HighwayChauffer extends AdaptionRuleBase {
     // The reference speed is of 60km/h.
     private static final int REFERENCE_SPEED = 120;
 
-    private BundleContext context;
+    protected BundleContext context;
 
-    public SwitchToL3HighwayChauffer(BundleContext context) {
+    public SwitchToL3HighwayChaufferRuleBase(BundleContext context) {
         this.context = context;
     }
 
@@ -83,30 +83,7 @@ public class SwitchToL3HighwayChauffer extends AdaptionRuleBase {
         l3DrivingService.startDriving();
     }
 
-    private boolean evaluateRuleCondition(
-            CurrentDrivingServiceStatus currentDrivingServiceStatus,
-            RoadContext roadContext)
-    {
-        // All the L3 required services must be available.
-        boolean areAllServicesAvailable = L3ConfigurationUtils.areAllL3RequiredServicesAvailable(this.context);
-
-        // The current autonomy level must be L2, or L3 but not of the HighwayChauffer.
-        DrivingAutonomyLevel autonomyLevel = currentDrivingServiceStatus.getAutonomyLevel();
-
-        boolean canSwitchFromCurrentDrivingService =
-            autonomyLevel == DrivingAutonomyLevel.L2
-                || (autonomyLevel == DrivingAutonomyLevel.L3
-                    && !L3_HighwayChauffer.class.isAssignableFrom(currentDrivingServiceStatus.getDrivingServiceClass()));
-
-        // The road type must be highway and fluid.
-        boolean roadTypeAndStatus = roadContext.getType() == ERoadType.HIGHWAY
-                    && roadContext.getStatus() == ERoadStatus.FLUID;
-
-        return canSwitchFromCurrentDrivingService
-            && areAllServicesAvailable
-            && roadTypeAndStatus;
-    }
-
+    protected abstract boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, RoadContext roadContext);
 
     private IL3_HighwayChauffer initializeL3HighwayChauffer() {
         L3_HighwayChauffer highwayChauffer = new L3_HighwayChauffer(context, "L3_HighwayChauffer");
