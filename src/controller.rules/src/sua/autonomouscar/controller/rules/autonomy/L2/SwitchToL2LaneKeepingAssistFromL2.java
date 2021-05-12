@@ -7,6 +7,7 @@ import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.SteeringHealthStatus;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
+import sua.autonomouscar.driving.l2.lka.L2_LaneKeepingAssist;
 import sua.autonomouscar.interfaces.ERoadType;
 
 public class SwitchToL2LaneKeepingAssistFromL2 extends SwitchToL2LaneKeepingAssistBase {
@@ -24,11 +25,14 @@ public class SwitchToL2LaneKeepingAssistFromL2 extends SwitchToL2LaneKeepingAssi
         boolean areLineSensorsAvailable = leftLineSensorsHealthStatus.isAvailable()
             && rightLineSensorsHealthStatus.isAvailable();
 
-        boolean conditionsToSwitchFromL1 = currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L2
-            && (roadContext.getType() == ERoadType.STD_ROAD
-                || roadContext.getType() == ERoadType.CITY);
+        boolean canSwitchFromCurrentDrivingService = currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L2
+            && !L2_LaneKeepingAssist.class.isAssignableFrom(currentDrivingServiceStatus.getDrivingServiceClass());
 
-        return conditionsToSwitchFromL1
+        boolean roadTypeAndStatus = roadContext.getType() == ERoadType.STD_ROAD
+            || roadContext.getType() == ERoadType.CITY;
+
+        return canSwitchFromCurrentDrivingService
+            && roadTypeAndStatus
             && areLineSensorsAvailable
             && steeringHealthStatus.isAvailable();
     }
