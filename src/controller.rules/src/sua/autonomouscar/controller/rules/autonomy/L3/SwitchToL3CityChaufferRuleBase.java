@@ -8,15 +8,12 @@ import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.rules.AdaptionRuleBase;
 import sua.autonomouscar.controller.rules.utils.L3ConfigurationUtils;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
-import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IL2_DrivingService;
 import sua.autonomouscar.driving.interfaces.IL3_CityChauffer;
 import sua.autonomouscar.driving.l3.citychauffer.L3_CityChauffer;
-import sua.autonomouscar.driving.l3.trafficjamchauffer.L3_TrafficJamChauffer;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.infrastructure.Thing;
-import sua.autonomouscar.interfaces.ERoadType;
 
 /**
  * This rule changes the autonomous driving module from {@link IL2_DrivingService} to {@link IL3_CityChauffer}.

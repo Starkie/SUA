@@ -7,10 +7,7 @@ import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.rules.AdaptionRuleBase;
 import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
-import sua.autonomouscar.controller.utils.DrivingAutonomyLevel;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
-import sua.autonomouscar.driving.interfaces.IFallbackPlan;
-import sua.autonomouscar.driving.l2.lka.L2_LaneKeepingAssist;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
 /**

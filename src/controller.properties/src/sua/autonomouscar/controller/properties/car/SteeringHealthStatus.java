@@ -3,7 +3,6 @@ package sua.autonomouscar.controller.properties.car;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.properties.HealthStatusBase;
-import sua.autonomouscar.devices.interfaces.ISteering;
 
 /**
  * Represents the status of the {@link ISteeringe}.
