@@ -24,8 +24,9 @@ public class CurrentDrivingServiceStatus extends KnowledgeBase {
     }
 
     public void setAutonomyLevel(DrivingAutonomyLevel autonomyLevel, Class drivingServiceClass) {
-        if (autonomyLevel != null && autonomyLevel != this.getAutonomyLevel()
-            && drivingServiceClass != null && drivingServiceClass != this.getDrivingServiceClass()) {
+        if (autonomyLevel != null && drivingServiceClass != null
+            && (autonomyLevel != this.getAutonomyLevel()
+                || drivingServiceClass != this.getDrivingServiceClass())) {
             updateProperty(AUTONOMY_LEVEL, autonomyLevel, false);
             updateProperty(DRIVING_SERVICE, drivingServiceClass, true);
         }

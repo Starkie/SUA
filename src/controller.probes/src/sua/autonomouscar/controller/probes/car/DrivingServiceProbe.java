@@ -3,6 +3,7 @@ package sua.autonomouscar.controller.probes.car;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
+import org.osgi.framework.ServiceReference;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
@@ -38,9 +39,12 @@ public class DrivingServiceProbe implements IProbe<IDrivingService>, ServiceList
         switch (event.getType()) {
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
-            IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
+        case ServiceEvent.UNREGISTERING:
+            ServiceReference<IDrivingService> serviceReference = (ServiceReference<IDrivingService>) event.getServiceReference();
 
-            this.registerMeasurement(currentDrivingService);
+            IDrivingService changedDrivingService = context.getService(serviceReference);
+
+            this.registerMeasurement(changedDrivingService);
 
             break;
         default:

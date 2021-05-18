@@ -11,13 +11,14 @@ import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.infrastructure.OSGiUtils;
+import sua.autonomouscar.infrastructure.driving.DrivingService;
 import sua.autonomouscar.interfaces.IIdentifiable;
 
 /**
  * Class with utility methods to interact with the autonomous vehicle OSGi context.
  */
 public class AutonomousVehicleContextUtils {
-	
+
 	/**
 	 * Searches for the {@link IDrivingService} that is currently active in the vehicle.
 	 * @param context The autonomous vehicle OSGi context.
@@ -25,32 +26,11 @@ public class AutonomousVehicleContextUtils {
 	 */
 	public static IDrivingService findCurrentDrivingService(BundleContext context)
 	{
-		// Get all the registered IDrivingService references.
-		Collection<ServiceReference<IDrivingService>> drivingServiceReferences = null;
-		
-		try {
-			drivingServiceReferences = context.getServiceReferences(IDrivingService.class, null);
-		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
-			
-			return null;
-		}
-		
-		// Resolve all the service references.
-		Collection<IDrivingService> existingDrivingServices = drivingServiceReferences
-				.stream()
-				.map(sr -> context.getService(sr))
-				.collect(Collectors.toUnmodifiableList());
-		
-		// Find the active driving service.
-		IDrivingService currentDrivingService = existingDrivingServices.stream()
-				.filter(ds -> ds != null && ds.isDriving())
-				.findFirst()
-				.orElseGet(() -> null);
-		
+		IDrivingService currentDrivingService = OSGiUtils.getService(context, IDrivingService.class, String.format("(%s=%s)", DrivingService.ACTIVE, true));
+
 		return currentDrivingService;
 	}
-	
+
 	/**
 	 * Searches for the best {@link IDistanceSensor} in the given {@link DistanceSensorPositon} that is currently active in the vehicle.
 	 * @param context The autonomous vehicle OSGi context.
@@ -60,15 +40,15 @@ public class AutonomousVehicleContextUtils {
 	public static IDistanceSensor findDistanceSensor(BundleContext context, DistanceSensorPositon position) {
 		// Always prioritize the normal distance sensor before the LIDAR.
 		IDistanceSensor distanceSensor = OSGiUtils.getService(context, IDistanceSensor.class, String.format("(%s=%s)", IIdentifiable.ID, position.getNormalSensorId()));
-		
+
 		if (distanceSensor == null)
 		{
 			distanceSensor = OSGiUtils.getService(context, IDistanceSensor.class, String.format("(%s=%s)", IIdentifiable.ID, position.getLidarSensorId()));
 		}
-		
+
 		return distanceSensor;
 	}
-	
+
 	/**
 	 * Searches for the {@link ILineSensor} in the given {@link LineSensorPositon} that is currently active in the vehicle.
 	 * @param context The autonomous vehicle OSGi context.
