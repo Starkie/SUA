@@ -26,7 +26,7 @@ public class SwitchToL1AssistedDrivingFromL3Rule extends SwitchToL1AssistedDrivi
         boolean areLineSensorsAvailable = leftLineSensorsHealthStatus.isAvailable()
             && rightLineSensorsHealthStatus.isAvailable();
 
-        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L0
+        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L3
             && roadContext != null && roadContext.getType() == ERoadType.OFF_ROAD
             && frontDistanceSensorHealthStatus.isAvailable()
             && areLineSensorsAvailable;

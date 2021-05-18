@@ -90,14 +90,7 @@ public abstract class SwitchToL1AssistedDrivingRuleBase extends AdaptionRuleBase
 		frontDistanceSensorHealthStatus.setActiveDistanceSensorId(((Thing)distanceSensor).getId());
 	}
 
-    private boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus) {
-        boolean areLineSensorsAvailable = leftLineSensorsHealthStatus.isAvailable()
-            && rightLineSensorsHealthStatus.isAvailable();
-
-        return currentDrivingServiceStatus.getAutonomyLevel() == DrivingAutonomyLevel.L0
-            && frontDistanceSensorHealthStatus.isAvailable()
-            && areLineSensorsAvailable;
-    }
+    protected abstract boolean evaluateRuleCondition(CurrentDrivingServiceStatus currentDrivingServiceStatus, DistanceSensorHealthStatus frontDistanceSensorHealthStatus, LineSensorsHealthStatus leftLineSensorsHealthStatus, LineSensorsHealthStatus rightLineSensorsHealthStatus);
 
     private IL1_AssistedDriving initializeL1AssistedDriving() {
         L1_AssistedDriving assistedDriving = new L1_AssistedDriving(context, "L1_AssistedDriving");
