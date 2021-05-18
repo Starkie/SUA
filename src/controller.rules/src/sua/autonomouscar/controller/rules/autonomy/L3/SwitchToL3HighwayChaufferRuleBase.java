@@ -73,6 +73,7 @@ abstract class SwitchToL3HighwayChaufferRuleBase extends AdaptionRuleBase {
         // Unregister the current driving service and replace it with the IL3_HighwayChauffer.
         if (currentDrivingService != null)
         {
+            currentDrivingService.stopDriving();
             ((Thing)currentDrivingService).unregisterThing();
         }
 

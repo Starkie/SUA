@@ -73,6 +73,7 @@ abstract class SwitchToL3CityChaufferRuleBase extends AdaptionRuleBase {
         // Unregister the current driving service and replace it with the L3_CityChauffer.
         if (currentDrivingService != null)
         {
+            currentDrivingService.stopDriving();
             ((Thing)currentDrivingService).unregisterThing();
         }
 
