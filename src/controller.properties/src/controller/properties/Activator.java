@@ -12,6 +12,8 @@ import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
 import sua.autonomouscar.controller.properties.car.SteeringHealthStatus;
+import sua.autonomouscar.controller.properties.driver.CopilotContext;
+import sua.autonomouscar.controller.properties.driver.DriverContext;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
@@ -53,6 +55,12 @@ public class Activator implements BundleActivator {
 
     private NotificationServiceHealthStatus notificationServiceStatus;
     private ServiceRegistration<?> notificationServiceStatusRegistration;
+    
+    private DriverContext driverContext;
+    private ServiceRegistration<?>driverContextRegistration;
+    
+    private CopilotContext copilotContext;
+    private ServiceRegistration<?>copilotContextRegistration;
 
     private RoadContext roadContext;
     private ServiceRegistration<?>roadContextRegistration;
@@ -97,6 +105,12 @@ public class Activator implements BundleActivator {
 
         this.notificationServiceStatus = new NotificationServiceHealthStatus(context);
         this.notificationServiceStatusRegistration = this.notificationServiceStatus.registerKnowledge();
+        
+        this.driverContext = new DriverContext(context);
+        this.driverContextRegistration = this.driverContext.registerKnowledge();
+        
+        this.copilotContext = new CopilotContext(context);
+        this.copilotContextRegistration = this.copilotContext.registerKnowledge();
 
         this.roadContext = new RoadContext(context);
         this.roadContextRegistration = this.roadContext.registerKnowledge();
@@ -138,6 +152,12 @@ public class Activator implements BundleActivator {
 
         this.notificationServiceStatusRegistration.unregister();
         this.notificationServiceStatus = null;
+        
+        this.driverContextRegistration.unregister();
+        this.driverContext = null;
+        
+        this.copilotContextRegistration.unregister();
+        this.copilotContext = null;
 
         this.roadContextRegistration.unregister();
         this.roadContext = null;
