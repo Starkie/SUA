@@ -31,8 +31,4 @@ public class CurrentDrivingServiceStatus extends KnowledgeBase {
             updateProperty(DRIVING_SERVICE, drivingServiceClass, true);
         }
     }
-
-    public void setDrivingService(Class drivingServiceClass) {
-
-    }
 }
