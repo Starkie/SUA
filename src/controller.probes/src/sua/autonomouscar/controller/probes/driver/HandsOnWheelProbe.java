@@ -9,10 +9,10 @@ import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
 import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
-public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener{
+public class HandsOnWheelProbe implements IProbe<IHumanSensors>, ServiceListener{
 	private BundleContext context;
 
-    public DriverStatusProbe(BundleContext context) {
+    public HandsOnWheelProbe(BundleContext context) {
         this.context = context;
     }
 
@@ -24,7 +24,7 @@ public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener
             return;
         }
 
-        monitor.registerDriverStatusChange(sensor.getFaceStatus());
+        monitor.registerHandsOnWheelChange(sensor.areTheHandsOnTheWheel());
     }
 
     @Override

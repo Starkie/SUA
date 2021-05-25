@@ -10,6 +10,4 @@ public interface IDriverStatusMonitor {
 	
 	void registerDriverSeatChange(boolean status);
 	
-	void registerIsDriverReadyChange();
-
 }

@@ -5,26 +5,28 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
-import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
-import sua.autonomouscar.devices.interfaces.IHumanSensors;
+import sua.autonomouscar.controller.monitors.driver.ICopilotStatusMonitor;
+import sua.autonomouscar.devices.interfaces.ICopilotSensor;
+import sua.autonomouscar.devices.interfaces.IDriverSensor;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
-public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener{
+public class CopilotSeatProbe implements IProbe<ICopilotSensor>, ServiceListener{
 	private BundleContext context;
 
-    public DriverStatusProbe(BundleContext context) {
+    public CopilotSeatProbe(BundleContext context) {
         this.context = context;
     }
 
     @Override
-    public void registerMeasurement(IHumanSensors sensor) {
-        IDriverStatusMonitor monitor = OSGiUtils.getService(context, IDriverStatusMonitor.class);
+    public void registerMeasurement(ICopilotSensor sensor) {
+        ICopilotStatusMonitor monitor = OSGiUtils.getService(context, ICopilotStatusMonitor.class);
 
         if (monitor == null) {
             return;
         }
 
-        monitor.registerDriverStatusChange(sensor.getFaceStatus());
+        monitor.registerCopilotSeatChange(sensor.isCopilotSeatOccupied());
+
     }
 
     @Override
@@ -32,7 +34,7 @@ public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener
         switch (event.getType()) {
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
-            this.registerMeasurement(OSGiUtils.getService(context, IHumanSensors.class));
+            this.registerMeasurement(OSGiUtils.getService(context, ICopilotSensor.class));
 
             break;
         default:

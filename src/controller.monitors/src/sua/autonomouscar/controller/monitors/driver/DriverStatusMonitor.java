@@ -29,7 +29,7 @@ public class DriverStatusMonitor implements IDriverStatusMonitor{
 	@Override
 	public void registerHandsOnWheelChange(boolean status) {
 		DriverContext driverContext = OSGiUtils.getService(context, DriverContext.class);
-		if (driverContext != null && driverContext.isHasHandsOnWheel() != status) {
+		if (driverContext != null && driverContext.getHasHandsOnWheel() != status) {
             System.out.println("[Driver Status Monitor] -  Updating the Driver 'hands on wheel' to " + status);
 
             driverContext.setHasHandsOnWheel(status);
@@ -48,23 +48,23 @@ public class DriverStatusMonitor implements IDriverStatusMonitor{
 		
 	}
 	
-	@Override
-	public void registerIsDriverReadyChange() {
-		DriverContext driverContext = OSGiUtils.getService(context, DriverContext.class);
-		if (driverContext != null &&
-			driverContext.getDriverStatus() == EFaceStatus.LOOKING_FORWARD &&
-			driverContext.isDriverSeatOccupied() &&
-			driverContext.isHasHandsOnWheel()) {
-            System.out.println("[Driver Status Monitor] -  Updating the Driver 'is ready' to true");
-
-            driverContext.setDriverReady(true);
-        } else {
-        	System.out.println("[Driver Status Monitor] -  Updating the Driver 'is ready' to false");
-
-            driverContext.setDriverReady(false);
-        }
-		
-	}
+//	@Override
+//	public void registerIsDriverReadyChange() {
+//		DriverContext driverContext = OSGiUtils.getService(context, DriverContext.class);
+//		if (driverContext != null &&
+//			driverContext.getDriverStatus() == EFaceStatus.LOOKING_FORWARD &&
+//			driverContext.isDriverSeatOccupied() &&
+//			driverContext.isHasHandsOnWheel()) {
+//            System.out.println("[Driver Status Monitor] -  Updating the Driver 'is ready' to true");
+//
+//            driverContext.setDriverReady(true);
+//        } else {
+//        	System.out.println("[Driver Status Monitor] -  Updating the Driver 'is ready' to false");
+//
+//            driverContext.setDriverReady(false);
+//        }
+//		
+//	}
 	
 
 }

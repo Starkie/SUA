@@ -7,10 +7,10 @@ import sua.autonomouscar.interfaces.EFaceStatus;
 
 public class DriverContext extends KnowledgeBase{
 	
-	private static boolean hasHandsOnWheel;
-	private static boolean isDriverSeatOccupied;
-	private static boolean isDriverReady;
-	private static EFaceStatus status;
+	private static final String HAS_HANDS_ON_WHEEL = "hasHandsOnWheel";
+    private static final String IS_DRIVER_SEAT_OCCUPIED = "isDriverSeatOccupied";
+    private static final String DRIVER_STATUS = "driverStatus";
+    private static final String IS_DRIVER_READY = "isDriverReady";
 	
 	public DriverContext(BundleContext context) {
         super(context);
@@ -18,36 +18,49 @@ public class DriverContext extends KnowledgeBase{
         this.addImplementedInterface(DriverContext.class.getName());
     }
 	
-	public static boolean isHasHandsOnWheel() {
-		return hasHandsOnWheel;
+	public boolean getHasHandsOnWheel() {
+		return (boolean) this.properties.get(HAS_HANDS_ON_WHEEL);
 	}
 
-	public static void setHasHandsOnWheel(boolean hasHandsOnWheel) {
-		DriverContext.hasHandsOnWheel = hasHandsOnWheel;
+	public void setHasHandsOnWheel(boolean hasHandsOnWheel) {
+		if (hasHandsOnWheel != this.getHasHandsOnWheel()) {
+            updateProperty(HAS_HANDS_ON_WHEEL, hasHandsOnWheel, false);
+            this.updateIsDriverReady();
+        }
 	}
 
-	public static boolean isDriverSeatOccupied() {
-		return isDriverSeatOccupied;
+	public boolean isDriverSeatOccupied() {
+		return (boolean) this.properties.get(IS_DRIVER_SEAT_OCCUPIED);
 	}
 
-	public static void setDriverSeatOccupied(boolean isDriverSeatOccupied) {
-		DriverContext.isDriverSeatOccupied = isDriverSeatOccupied;
+	public void setDriverSeatOccupied(boolean isDriverSeatOccupied) {
+		if (isDriverSeatOccupied != this.isDriverSeatOccupied()) {
+            updateProperty(IS_DRIVER_SEAT_OCCUPIED, isDriverSeatOccupied, false);
+            this.updateIsDriverReady();
+        }
 	}
 
-	public static boolean isDriverReady() {
-		return isDriverReady;
+	public void updateIsDriverReady() {
+		boolean isDriverReady = this.getDriverStatus() == EFaceStatus.LOOKING_FORWARD &&
+								isDriverSeatOccupied() &&
+								getHasHandsOnWheel();
+			
+		updateProperty(IS_DRIVER_READY, isDriverReady, true);
 	}
 
-	public static void setDriverReady(boolean isDriverReady) {
-		DriverContext.isDriverReady = isDriverReady;
+	public boolean isDriverReady() {
+		return (boolean) this.properties.get(IS_DRIVER_READY);
 	}
 
-	public static EFaceStatus getDriverStatus() {
-		return status;
+	public EFaceStatus getDriverStatus() {
+		return (EFaceStatus) this.properties.get(DRIVER_STATUS);
 	}
 
-	public static void setDriverStatus(EFaceStatus status) {
-		DriverContext.status = status;
+	public void setDriverStatus(EFaceStatus driverStatus) {
+		if (driverStatus != this.getDriverStatus()) {
+            updateProperty(DRIVER_STATUS, driverStatus, false);
+            this.updateIsDriverReady();
+        }
 	}
 
 }
