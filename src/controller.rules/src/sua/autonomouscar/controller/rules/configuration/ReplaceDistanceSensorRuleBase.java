@@ -9,6 +9,7 @@ import sua.autonomouscar.controller.utils.AutonomousVehicleContextUtils;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.infrastructure.OSGiUtils;
+import sua.autonomouscar.interaction.interfaces.INotificationService;
 
 /**
  * Base class for implementing a rule that replaces the given distance sensor in the current driving service.
@@ -41,6 +42,10 @@ public abstract class ReplaceDistanceSensorRuleBase extends AdaptionRuleBase {
         System.out.println("[ Controller ] Executing the " + this.getClass().getSimpleName() + " rule.");
 
         IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
+        
+        INotificationService noit = OSGiUtils.getService(context, INotificationService.class);
+        
+        noit.addInteractionMechanism(null)
 
         this.replaceDistanceSensor(currentDrivingService, distanceSensorHealthStatus);
     }

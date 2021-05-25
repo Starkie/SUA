@@ -1,9 +1,15 @@
 package sua.autonomouscar.controller.probes;
 
+import java.sql.Driver;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
+import sua.autonomouscar.controller.monitors.driver.CopilotStatusMonitor;
+import sua.autonomouscar.controller.monitors.driver.DriverStatusMonitor;
+import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
+import sua.autonomouscar.controller.monitors.driver.ISeatStatusMonitor;
 import sua.autonomouscar.controller.probes.car.DistanceSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.car.EngineHealthCheckProbe;
@@ -12,6 +18,7 @@ import sua.autonomouscar.controller.probes.car.HumanSensorsHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.SteeringHealthCheckProbe;
+import sua.autonomouscar.controller.probes.driver.SeatSensorProbe;
 import sua.autonomouscar.controller.probes.road.RoadContextProbe;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
@@ -20,6 +27,7 @@ import sua.autonomouscar.devices.interfaces.IEngine;
 import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
+import sua.autonomouscar.devices.interfaces.ISeatSensor;
 import sua.autonomouscar.devices.interfaces.ISteering;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IFallbackPlan;
@@ -46,6 +54,8 @@ public class Activator implements BundleActivator {
     private DistanceSensorHealthCheckProbe rightDistanceSensorHealthCheckProbe;
     private DistanceSensorHealthCheckProbe rearDistanceSensorHealthCheckProbe;
     private SteeringHealthCheckProbe steeringHealthCheckProbe;
+	private SeatSensorProbe driverSeatSensorProbe;
+	private SeatSensorProbe copilotSeatSensorProbe;
 
     public void start(BundleContext bundleContext) throws Exception {
         Activator.context = bundleContext;
@@ -180,6 +190,17 @@ public class Activator implements BundleActivator {
 
         String steeringHealthCheckProbeListenerFilter = "(objectclass=" + ISteering.class.getName() + ")";
         context.addServiceListener(this.steeringHealthCheckProbe, steeringHealthCheckProbeListenerFilter);
+        
+        // Seat sensor probes.
+        this.driverSeatSensorProbe = new SeatSensorProbe(bundleContext, IDriverStatusMonitor.class.getName());
+        
+        String driverSeatSensorProbeListenerFilter = "(&(objectclass=" + ISeatSensor.class.getName() + ")(id=DriverSeatSensor))";
+        context.addServiceListener(this.driverSeatSensorProbe, driverSeatSensorProbeListenerFilter);
+        
+        this.copilotSeatSensorProbe = new SeatSensorProbe(bundleContext, ISeatStatusMonitor.class.getName());
+        
+        String copilotSeatSensorProbeListenerFilter1 = "(&(objectclass=" + ISeatSensor.class.getName() + ")(id=CopilotSeatSensor))";
+        context.addServiceListener(this.copilotSeatSensorProbe, copilotSeatSensorProbeListenerFilter1);
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
@@ -221,6 +242,12 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.steeringHealthCheckProbe);
         this.steeringHealthCheckProbe = null;
+        
+        context.removeServiceListener(this.driverSeatSensorProbe);
+        this.driverSeatSensorProbe = null;
+        
+        context.removeServiceListener(this.copilotSeatSensorProbe);
+        this.copilotSeatSensorProbe = null;
 
         Activator.context = null;
     }

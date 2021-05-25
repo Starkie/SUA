@@ -5,7 +5,7 @@ import org.osgi.framework.BundleContext;
 import sua.autonomouscar.controller.properties.driver.CopilotContext;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
-public class CopilotStatusMonitor implements ICopilotStatusMonitor{
+public class CopilotStatusMonitor implements ISeatStatusMonitor{
 
 	private BundleContext context;
 
@@ -14,8 +14,9 @@ public class CopilotStatusMonitor implements ICopilotStatusMonitor{
     }
 	
 	@Override
-	public void registerCopilotSeatChange(boolean status) {
+	public void registerSeatChange(boolean status) {
 		CopilotContext driverContext = OSGiUtils.getService(context, CopilotContext.class);
+		
 		if (driverContext != null && driverContext.isSeatOccupied() != status) {
             System.out.println("[Copilot Status Monitor] -  Updating the Copilot 'seat occupied' to " + status);
 

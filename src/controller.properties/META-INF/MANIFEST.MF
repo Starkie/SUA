@@ -10,4 +10,5 @@ Automatic-Module-Name: controller.knoledge
 Require-Bundle: controller,
  AutonomousCar.interfaces
 Export-Package: sua.autonomouscar.controller.properties.car,
+ sua.autonomouscar.controller.properties.driver,
  sua.autonomouscar.controller.properties.road

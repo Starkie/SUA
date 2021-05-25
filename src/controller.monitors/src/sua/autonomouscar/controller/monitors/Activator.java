@@ -17,8 +17,8 @@ import sua.autonomouscar.controller.monitors.car.NotificationServiceHealthMonito
 import sua.autonomouscar.controller.monitors.car.SteeringHealthMonitor;
 import sua.autonomouscar.controller.monitors.driver.CopilotStatusMonitor;
 import sua.autonomouscar.controller.monitors.driver.DriverStatusMonitor;
-import sua.autonomouscar.controller.monitors.driver.ICopilotStatusMonitor;
 import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
+import sua.autonomouscar.controller.monitors.driver.ISeatStatusMonitor;
 import sua.autonomouscar.controller.monitors.road.IRoadContextMonitor;
 import sua.autonomouscar.controller.monitors.road.RoadContextMonitor;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
@@ -40,7 +40,7 @@ public class Activator implements BundleActivator {
     private ServiceRegistration<LineSensorsHealthMonitor> rightLineSensorHealthMonitorServiceRegistration;
     private ServiceRegistration<NotificationServiceHealthMonitor> notificationServiceHealthMonitorRegistration;
     private ServiceRegistration<IDriverStatusMonitor> driverStatusServiceRegistration;
-    private ServiceRegistration<ICopilotStatusMonitor> copilotStatusServiceRegistration;
+    private ServiceRegistration<ISeatStatusMonitor> copilotStatusServiceRegistration;
     private ServiceRegistration<IRoadContextMonitor> roadContextServiceRegistration;
     private ServiceRegistration<SteeringHealthMonitor> steeringContextServiceRegistration;
 
@@ -113,8 +113,8 @@ public class Activator implements BundleActivator {
         IDriverStatusMonitor driverStatusMonitor = new DriverStatusMonitor(bundleContext);
         this.driverStatusServiceRegistration = context.registerService(IDriverStatusMonitor.class, driverStatusMonitor, null);
         
-        ICopilotStatusMonitor copilotStatusMonitor = new CopilotStatusMonitor(bundleContext);
-        this.copilotStatusServiceRegistration = context.registerService(ICopilotStatusMonitor.class, copilotStatusMonitor, null);
+        ISeatStatusMonitor copilotStatusMonitor = new CopilotStatusMonitor(bundleContext);
+        this.copilotStatusServiceRegistration = context.registerService(ISeatStatusMonitor.class, copilotStatusMonitor, null);
         
         IRoadContextMonitor roadContextMonitor = new RoadContextMonitor(bundleContext);
         this.roadContextServiceRegistration = context.registerService(IRoadContextMonitor.class, roadContextMonitor, null);

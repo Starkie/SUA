@@ -12,7 +12,7 @@ import sua.autonomouscar.infrastructure.OSGiUtils;
 public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener{
 	private BundleContext context;
 
-    public DriverStatusProbe(BundleContext context) {
+    public DriverStatusProbe(BundleContext context) {    	
         this.context = context;
     }
 

@@ -13,11 +13,11 @@ public class CopilotContext extends KnowledgeBase{
         this.addImplementedInterface(CopilotContext.class.getName());
     }
 	
-	public static boolean isSeatOccupied() {
+	public boolean isSeatOccupied() {
 		return seatOccupied;
 	}
 
-	public static void setSeatOccupied(boolean seatOccupied) {
+	public void setSeatOccupied(boolean seatOccupied) {
 		CopilotContext.seatOccupied = seatOccupied;
 	}
 

@@ -30,7 +30,14 @@ public class DriverContext extends KnowledgeBase{
 	}
 
 	public boolean isDriverSeatOccupied() {
-		return (boolean) this.properties.get(IS_DRIVER_SEAT_OCCUPIED);
+		Object propertyValue = this.properties.get(IS_DRIVER_SEAT_OCCUPIED);
+		
+		if (propertyValue == null)
+		{
+			return false;
+		}
+		
+		return (boolean) propertyValue;
 	}
 
 	public void setDriverSeatOccupied(boolean isDriverSeatOccupied) {

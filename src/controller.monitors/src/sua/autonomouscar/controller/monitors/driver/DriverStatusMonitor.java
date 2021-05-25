@@ -6,7 +6,7 @@ import sua.autonomouscar.controller.properties.driver.DriverContext;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 import sua.autonomouscar.interfaces.EFaceStatus;
 
-public class DriverStatusMonitor implements IDriverStatusMonitor{
+public class DriverStatusMonitor implements IDriverStatusMonitor {
 	private BundleContext context;
 
     public DriverStatusMonitor(BundleContext context) {
@@ -38,7 +38,7 @@ public class DriverStatusMonitor implements IDriverStatusMonitor{
 	}
 
 	@Override
-	public void registerDriverSeatChange(boolean status) {
+	public void registerSeatChange(boolean status) {
 		DriverContext driverContext = OSGiUtils.getService(context, DriverContext.class);
 		if (driverContext != null && driverContext.isDriverSeatOccupied() != status) {
             System.out.println("[Driver Status Monitor] -  Updating the Driver 'seat occupied' to " + status);

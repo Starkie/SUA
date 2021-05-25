@@ -2,12 +2,9 @@ package sua.autonomouscar.controller.monitors.driver;
 
 import sua.autonomouscar.interfaces.EFaceStatus;
 
-public interface IDriverStatusMonitor {
+public interface IDriverStatusMonitor extends ISeatStatusMonitor {
 	
 	void registerDriverStatusChange(EFaceStatus status);
 	
-	void registerHandsOnWheelChange(boolean status);
-	
-	void registerDriverSeatChange(boolean status);
-	
+	void registerHandsOnWheelChange(boolean status);	
 }
