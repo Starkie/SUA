@@ -36,10 +36,12 @@ public class EnableSteeringWheelHapticVibrationRule extends AdaptionRuleBase {
 
         HapticVibration steeringWheelHapticVibration = OSGiUtils.getService(context, HapticVibration.class, "(id=SteeringWheel)");
 
-        if (steeringWheelHapticVibration == null)
+        if (steeringWheelHapticVibration != null)
         {
-        	steeringWheelHapticVibration = this.initializeSteeringWheelHapticVibration();
+        	return;
         }
+        
+        steeringWheelHapticVibration = this.initializeSteeringWheelHapticVibration();
 
         INotificationService notificationService = OSGiUtils.getService(context, INotificationService.class);
 
