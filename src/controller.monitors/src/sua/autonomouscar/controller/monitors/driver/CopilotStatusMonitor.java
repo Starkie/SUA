@@ -15,12 +15,12 @@ public class CopilotStatusMonitor implements ISeatStatusMonitor{
 	
 	@Override
 	public void registerSeatChange(boolean status) {
-		CopilotContext driverContext = OSGiUtils.getService(context, CopilotContext.class);
+		CopilotContext copilotContext = OSGiUtils.getService(context, CopilotContext.class);
 		
-		if (driverContext != null && driverContext.isSeatOccupied() != status) {
+		if (copilotContext != null && copilotContext.isCopilotSeatOccupied() != status) {
             System.out.println("[Copilot Status Monitor] -  Updating the Copilot 'seat occupied' to " + status);
 
-            driverContext.setSeatOccupied(status);
+            copilotContext.setCopilotSeatOccupied(status);
         }
 		
 	}

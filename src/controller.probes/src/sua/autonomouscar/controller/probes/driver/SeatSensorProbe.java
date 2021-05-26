@@ -12,7 +12,6 @@ import sua.autonomouscar.infrastructure.OSGiUtils;
 
 public class SeatSensorProbe implements IProbe<ISeatSensor>, ServiceListener{
 	private BundleContext context;
-	
 	private String seatSensorMonitorClassName;
 
     public SeatSensorProbe(BundleContext context, String seatSensorMonitorClassName) {
@@ -45,9 +44,7 @@ public class SeatSensorProbe implements IProbe<ISeatSensor>, ServiceListener{
         case ServiceEvent.MODIFIED:
         case ServiceEvent.UNREGISTERING:
             ServiceReference<?> serviceReference = event.getServiceReference();
-            
             ISeatSensor sensor = (ISeatSensor) this.context.getService(serviceReference);
-            
 			this.registerMeasurement(sensor);
 
             break;

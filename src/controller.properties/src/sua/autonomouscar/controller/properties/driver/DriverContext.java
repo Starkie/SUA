@@ -19,7 +19,14 @@ public class DriverContext extends KnowledgeBase{
     }
 	
 	public boolean getHasHandsOnWheel() {
-		return (boolean) this.properties.get(HAS_HANDS_ON_WHEEL);
+		Object propertyValue = this.properties.get(HAS_HANDS_ON_WHEEL);
+		
+		if (propertyValue == null)
+		{
+			return false;
+		}
+		
+		return (boolean) propertyValue;
 	}
 
 	public void setHasHandsOnWheel(boolean hasHandsOnWheel) {
@@ -56,7 +63,14 @@ public class DriverContext extends KnowledgeBase{
 	}
 
 	public boolean isDriverReady() {
-		return (boolean) this.properties.get(IS_DRIVER_READY);
+		Object propertyValue = this.properties.get(IS_DRIVER_READY);
+		
+		if (propertyValue == null)
+		{
+			return false;
+		}
+		
+		return (boolean) propertyValue;
 	}
 
 	public EFaceStatus getDriverStatus() {
