@@ -7,11 +7,12 @@ import org.osgi.framework.ServiceReference;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
+import sua.autonomouscar.devices.interfaces.IHandsOnWheelSensor;
 import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.devices.interfaces.ISeatSensor;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
-public class HandsOnWheelProbe implements IProbe<IHumanSensors>, ServiceListener{
+public class HandsOnWheelProbe implements IProbe<IHandsOnWheelSensor>, ServiceListener{
 	private BundleContext context;
 
     public HandsOnWheelProbe(BundleContext context) {
@@ -19,14 +20,14 @@ public class HandsOnWheelProbe implements IProbe<IHumanSensors>, ServiceListener
     }
 
     @Override
-    public void registerMeasurement(IHumanSensors sensor) {
+    public void registerMeasurement(IHandsOnWheelSensor sensor) {
         IDriverStatusMonitor monitor = OSGiUtils.getService(context, IDriverStatusMonitor.class);
 
         if (monitor == null) {
             return;
         }
 
-        monitor.registerHandsOnWheelChange(sensor.areTheHandsOnTheWheel());
+        monitor.registerHandsOnWheelChange(sensor.areTheHandsOnTheSteeringWheel());
     }
 
     @Override
@@ -35,12 +36,8 @@ public class HandsOnWheelProbe implements IProbe<IHumanSensors>, ServiceListener
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
         case ServiceEvent.UNREGISTERING:
-            this.registerMeasurement(OSGiUtils.getService(context, IHumanSensors.class));
+            this.registerMeasurement(OSGiUtils.getService(context, IHandsOnWheelSensor.class));
 
-//        	ServiceReference<?> serviceReference = event.getServiceReference();
-//        	IHumanSensors sensor = (IHumanSensors) this.context.getService(serviceReference);
-//			this.registerMeasurement(sensor);
-        	
             break;
         default:
             break;

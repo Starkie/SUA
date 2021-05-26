@@ -26,6 +26,8 @@ import sua.autonomouscar.controller.utils.DistanceSensorPositon;
 import sua.autonomouscar.controller.utils.LineSensorPosition;
 import sua.autonomouscar.devices.interfaces.IDistanceSensor;
 import sua.autonomouscar.devices.interfaces.IEngine;
+import sua.autonomouscar.devices.interfaces.IFaceMonitor;
+import sua.autonomouscar.devices.interfaces.IHandsOnWheelSensor;
 import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.devices.interfaces.ILineSensor;
 import sua.autonomouscar.devices.interfaces.IRoadSensor;
@@ -194,43 +196,37 @@ public class Activator implements BundleActivator {
 
         String steeringHealthCheckProbeListenerFilter = "(objectclass=" + ISteering.class.getName() + ")";
         context.addServiceListener(this.steeringHealthCheckProbe, steeringHealthCheckProbeListenerFilter);
-        
+
         // Seat sensor probes.
         this.driverSeatSensorProbe = new SeatSensorProbe(bundleContext, IDriverStatusMonitor.class.getName());
-        
+
         String driverSeatSensorProbeListenerFilter = "(&(objectclass=" + ISeatSensor.class.getName() + ")(id=DriverSeatSensor))";
         context.addServiceListener(this.driverSeatSensorProbe, driverSeatSensorProbeListenerFilter);
-        
+
         this.copilotSeatSensorProbe = new SeatSensorProbe(bundleContext, ISeatStatusMonitor.class.getName());
-        
+
         String copilotSeatSensorProbeListenerFilter1 = "(&(objectclass=" + ISeatSensor.class.getName() + ")(id=CopilotSeatSensor))";
         context.addServiceListener(this.copilotSeatSensorProbe, copilotSeatSensorProbeListenerFilter1);
-        
-     // Add the Hands On Wheel probe.
+
+        // Add the Hands On Wheel probe.
         this.handsOnWheelProbe = new HandsOnWheelProbe(context);
         context.registerService(
                 new String[] { HandsOnWheelProbe.class.getName(), IProbe.class.getName() },
                 this.handsOnWheelProbe,
                 null);
-//TODO IHumanSensors correcto? La clase tiene las funciones de handsOnWheel y faceStatus
-        String handsOnWheelProbeListenerFilter = "(objectclass=" + IHumanSensors.class.getName() + ")";
+
+        String handsOnWheelProbeListenerFilter = "(objectclass=" + IHandsOnWheelSensor.class.getName() + ")";
         context.addServiceListener(this.handsOnWheelProbe, handsOnWheelProbeListenerFilter);
-        
-     // Add the Driver Status probe.
+
+        // Add the Driver Status probe.
         this.driverStatusProbe = new DriverStatusProbe(context);
         context.registerService(
                 new String[] { DriverStatusProbe.class.getName(), IProbe.class.getName() },
                 this.driverStatusProbe,
                 null);
 
-        String driverStatusProbeListenerFilter = "(objectclass=" + IHumanSensors.class.getName() + ")";
+        String driverStatusProbeListenerFilter = "(objectclass=" + IFaceMonitor.class.getName() + ")";
         context.addServiceListener(this.driverStatusProbe, driverStatusProbeListenerFilter);
-        
-        //TODO Borrar si funciona
-//        this.handsOnWheelProbe = new HandsOnWheelProbe(bundleContext);
-//        
-//        String handsOnWheelProbeListenerFilter = "(&(objectclass=" + IHumanSensors.class.getName() + ")(id=DriverSeatSensor))";
-//        context.addServiceListener(this.handsOnWheelProbe, handsOnWheelProbeListenerFilter);
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
@@ -272,16 +268,16 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.steeringHealthCheckProbe);
         this.steeringHealthCheckProbe = null;
-        
+
         context.removeServiceListener(this.driverSeatSensorProbe);
         this.driverSeatSensorProbe = null;
-        
+
         context.removeServiceListener(this.copilotSeatSensorProbe);
         this.copilotSeatSensorProbe = null;
-        
+
         context.removeServiceListener(this.handsOnWheelProbe);
         this.handsOnWheelProbe = null;
-        
+
         context.removeServiceListener(this.driverStatusProbe);
         this.driverStatusProbe = null;
 

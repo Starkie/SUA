@@ -6,18 +6,19 @@ import org.osgi.framework.ServiceListener;
 
 import sua.autonomouscar.controller.interfaces.IProbe;
 import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
+import sua.autonomouscar.devices.interfaces.IFaceMonitor;
 import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.infrastructure.OSGiUtils;
 
-public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener{
+public class DriverStatusProbe implements IProbe<IFaceMonitor>, ServiceListener{
 	private BundleContext context;
 
-    public DriverStatusProbe(BundleContext context) {    	
+    public DriverStatusProbe(BundleContext context) {
         this.context = context;
     }
 
     @Override
-    public void registerMeasurement(IHumanSensors sensor) {
+    public void registerMeasurement(IFaceMonitor sensor) {
         IDriverStatusMonitor monitor = OSGiUtils.getService(context, IDriverStatusMonitor.class);
 
         if (monitor == null) {
@@ -33,7 +34,7 @@ public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
         case ServiceEvent.UNREGISTERING:
-            this.registerMeasurement(OSGiUtils.getService(context, IHumanSensors.class));
+            this.registerMeasurement(OSGiUtils.getService(context, IFaceMonitor.class));
 
             break;
         default:
