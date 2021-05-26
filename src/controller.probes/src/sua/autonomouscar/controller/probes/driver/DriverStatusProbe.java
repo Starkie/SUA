@@ -32,6 +32,7 @@ public class DriverStatusProbe implements IProbe<IHumanSensors>, ServiceListener
         switch (event.getType()) {
         case ServiceEvent.REGISTERED:
         case ServiceEvent.MODIFIED:
+        case ServiceEvent.UNREGISTERING:
             this.registerMeasurement(OSGiUtils.getService(context, IHumanSensors.class));
 
             break;

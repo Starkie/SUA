@@ -18,6 +18,8 @@ import sua.autonomouscar.controller.probes.car.HumanSensorsHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.SteeringHealthCheckProbe;
+import sua.autonomouscar.controller.probes.driver.DriverStatusProbe;
+import sua.autonomouscar.controller.probes.driver.HandsOnWheelProbe;
 import sua.autonomouscar.controller.probes.driver.SeatSensorProbe;
 import sua.autonomouscar.controller.probes.road.RoadContextProbe;
 import sua.autonomouscar.controller.utils.DistanceSensorPositon;
@@ -56,6 +58,8 @@ public class Activator implements BundleActivator {
     private SteeringHealthCheckProbe steeringHealthCheckProbe;
 	private SeatSensorProbe driverSeatSensorProbe;
 	private SeatSensorProbe copilotSeatSensorProbe;
+	private HandsOnWheelProbe handsOnWheelProbe;
+	private DriverStatusProbe driverStatusProbe;
 
     public void start(BundleContext bundleContext) throws Exception {
         Activator.context = bundleContext;
@@ -201,6 +205,32 @@ public class Activator implements BundleActivator {
         
         String copilotSeatSensorProbeListenerFilter1 = "(&(objectclass=" + ISeatSensor.class.getName() + ")(id=CopilotSeatSensor))";
         context.addServiceListener(this.copilotSeatSensorProbe, copilotSeatSensorProbeListenerFilter1);
+        
+     // Add the Hands On Wheel probe.
+        this.handsOnWheelProbe = new HandsOnWheelProbe(context);
+        context.registerService(
+                new String[] { HandsOnWheelProbe.class.getName(), IProbe.class.getName() },
+                this.handsOnWheelProbe,
+                null);
+//TODO IHumanSensors correcto? La clase tiene las funciones de handsOnWheel y faceStatus
+        String handsOnWheelProbeListenerFilter = "(objectclass=" + IHumanSensors.class.getName() + ")";
+        context.addServiceListener(this.humanSensorsHealthCheckProbe, handsOnWheelProbeListenerFilter);
+        
+     // Add the Driver Status probe.
+        this.driverStatusProbe = new DriverStatusProbe(context);
+        context.registerService(
+                new String[] { DriverStatusProbe.class.getName(), IProbe.class.getName() },
+                this.driverStatusProbe,
+                null);
+
+        String driverStatusProbeListenerFilter = "(objectclass=" + IHumanSensors.class.getName() + ")";
+        context.addServiceListener(this.driverStatusProbe, driverStatusProbeListenerFilter);
+        
+        //TODO Borrar si funciona
+//        this.handsOnWheelProbe = new HandsOnWheelProbe(bundleContext);
+//        
+//        String handsOnWheelProbeListenerFilter = "(&(objectclass=" + IHumanSensors.class.getName() + ")(id=DriverSeatSensor))";
+//        context.addServiceListener(this.handsOnWheelProbe, handsOnWheelProbeListenerFilter);
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
@@ -248,6 +278,12 @@ public class Activator implements BundleActivator {
         
         context.removeServiceListener(this.copilotSeatSensorProbe);
         this.copilotSeatSensorProbe = null;
+        
+        context.removeServiceListener(this.handsOnWheelProbe);
+        this.handsOnWheelProbe = null;
+        
+        context.removeServiceListener(this.driverStatusProbe);
+        this.driverStatusProbe = null;
 
         Activator.context = null;
     }

@@ -48,23 +48,4 @@ public class DriverStatusMonitor implements IDriverStatusMonitor {
 		
 	}
 	
-//	@Override
-//	public void registerIsDriverReadyChange() {
-//		DriverContext driverContext = OSGiUtils.getService(context, DriverContext.class);
-//		if (driverContext != null &&
-//			driverContext.getDriverStatus() == EFaceStatus.LOOKING_FORWARD &&
-//			driverContext.isDriverSeatOccupied() &&
-//			driverContext.isHasHandsOnWheel()) {
-//            System.out.println("[Driver Status Monitor] -  Updating the Driver 'is ready' to true");
-//
-//            driverContext.setDriverReady(true);
-//        } else {
-//        	System.out.println("[Driver Status Monitor] -  Updating the Driver 'is ready' to false");
-//
-//            driverContext.setDriverReady(false);
-//        }
-//		
-//	}
-	
-
 }
