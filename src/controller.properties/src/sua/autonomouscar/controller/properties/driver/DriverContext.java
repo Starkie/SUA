@@ -6,26 +6,26 @@ import sua.autonomouscar.controller.properties.KnowledgeBase;
 import sua.autonomouscar.interfaces.EFaceStatus;
 
 public class DriverContext extends KnowledgeBase{
-	
+
 	private static final String HAS_HANDS_ON_WHEEL = "hasHandsOnWheel";
     private static final String IS_DRIVER_SEAT_OCCUPIED = "isDriverSeatOccupied";
     private static final String DRIVER_STATUS = "driverStatus";
     private static final String IS_DRIVER_READY = "isDriverReady";
-	
+
 	public DriverContext(BundleContext context) {
         super(context);
-        
+
         this.addImplementedInterface(DriverContext.class.getName());
     }
-	
+
 	public boolean getHasHandsOnWheel() {
 		Object propertyValue = this.properties.get(HAS_HANDS_ON_WHEEL);
-		
+
 		if (propertyValue == null)
 		{
 			return false;
 		}
-		
+
 		return (boolean) propertyValue;
 	}
 
@@ -38,12 +38,12 @@ public class DriverContext extends KnowledgeBase{
 
 	public boolean isDriverSeatOccupied() {
 		Object propertyValue = this.properties.get(IS_DRIVER_SEAT_OCCUPIED);
-		
+
 		if (propertyValue == null)
 		{
 			return false;
 		}
-		
+
 		return (boolean) propertyValue;
 	}
 
@@ -58,18 +58,20 @@ public class DriverContext extends KnowledgeBase{
 		boolean isDriverReady = this.getDriverStatus() == EFaceStatus.LOOKING_FORWARD &&
 								isDriverSeatOccupied() &&
 								getHasHandsOnWheel();
-			
+
+        System.out.println("[Driver Context] -  Updating the Is Driver Ready to " + isDriverReady);
+
 		updateProperty(IS_DRIVER_READY, isDriverReady, true);
 	}
 
 	public boolean isDriverReady() {
 		Object propertyValue = this.properties.get(IS_DRIVER_READY);
-		
+
 		if (propertyValue == null)
 		{
 			return false;
 		}
-		
+
 		return (boolean) propertyValue;
 	}
 
