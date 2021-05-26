@@ -214,7 +214,7 @@ public class Activator implements BundleActivator {
                 null);
 //TODO IHumanSensors correcto? La clase tiene las funciones de handsOnWheel y faceStatus
         String handsOnWheelProbeListenerFilter = "(objectclass=" + IHumanSensors.class.getName() + ")";
-        context.addServiceListener(this.humanSensorsHealthCheckProbe, handsOnWheelProbeListenerFilter);
+        context.addServiceListener(this.handsOnWheelProbe, handsOnWheelProbeListenerFilter);
         
      // Add the Driver Status probe.
         this.driverStatusProbe = new DriverStatusProbe(context);
