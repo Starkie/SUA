@@ -43,10 +43,6 @@ public abstract class ReplaceDistanceSensorRuleBase extends AdaptionRuleBase {
 
         IDrivingService currentDrivingService = AutonomousVehicleContextUtils.findCurrentDrivingService(context);
         
-        INotificationService noit = OSGiUtils.getService(context, INotificationService.class);
-        
-        noit.addInteractionMechanism(null)
-
         this.replaceDistanceSensor(currentDrivingService, distanceSensorHealthStatus);
     }
 
