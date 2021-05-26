@@ -10,6 +10,7 @@ import sua.autonomouscar.controller.properties.car.FallbackPlanHealthStatus;
 import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
+import sua.autonomouscar.controller.properties.driver.DriverContext;
 import sua.autonomouscar.controller.properties.road.RoadContext;
 import sua.autonomouscar.controller.rules.autonomy.L0.SwitchToL0ManualDrivingFromL1Rule;
 import sua.autonomouscar.controller.rules.autonomy.L0.SwitchToL0ManualDrivingFromL2AdaptiveCruiseControlRule;
@@ -32,6 +33,7 @@ import sua.autonomouscar.controller.rules.configuration.ReplaceFrontDistanceSens
 import sua.autonomouscar.controller.rules.configuration.ReplaceLeftDistanceSensorRule;
 import sua.autonomouscar.controller.rules.configuration.ReplaceRearDistanceSensorRule;
 import sua.autonomouscar.controller.rules.configuration.ReplaceRightDistanceSensorRule;
+import sua.autonomouscar.controller.rules.notification.steeringwheel.EnableSteeringWheelHapticVibrationRule;
 import sua.autonomouscar.infrastructure.devices.Steering;
 
 public class Activator implements BundleActivator {
@@ -64,6 +66,7 @@ public class Activator implements BundleActivator {
     private SwitchToL3CityChaufferFromL3Rule switchToL3CityChaufferFromL3Rule;
     private SwitchToL2LaneKeepingAssistFromL2 switchToL2LaneKeepingAssistFromL2Rule;
     private SwitchToL2AdaptiveCruiseControlFromL2Rule switchToL2AdaptiveCruiseControlFromL2Rule;
+	private EnableSteeringWheelHapticVibrationRule enableSteeringWheelHapticVibrationRule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -153,6 +156,12 @@ public class Activator implements BundleActivator {
 
         this.swithToL3TrafficJamChaufferFromL3 = new SwitchToL3TrafficJamChaufferFromL3(context);
         context.addServiceListener(this.swithToL3TrafficJamChaufferFromL3, swithToL3RuleFilter);
+
+        // Interaction mechanisms.
+        String steeringWheelHapticVibrationFilter = createFilter(DriverContext.class, NotificationServiceHealthStatus.class);
+
+        this.enableSteeringWheelHapticVibrationRule = new EnableSteeringWheelHapticVibrationRule(bundleContext);
+        context.addServiceListener(this.enableSteeringWheelHapticVibrationRule, steeringWheelHapticVibrationFilter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -221,6 +230,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.swithToL3TrafficJamChaufferFromL3);
         this.swithToL3TrafficJamChaufferFromL3 = null;
+
+        context.removeServiceListener(this.enableSteeringWheelHapticVibrationRule);
+        this.enableSteeringWheelHapticVibrationRule = null;
 
 		Activator.context = null;
 	}
