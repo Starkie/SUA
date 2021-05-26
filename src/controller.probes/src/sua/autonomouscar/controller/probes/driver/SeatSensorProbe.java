@@ -22,19 +22,21 @@ public class SeatSensorProbe implements IProbe<ISeatSensor>, ServiceListener{
     @Override
     public void registerMeasurement(ISeatSensor sensor) {
     	ServiceReference<?> monitorServiceReference = this.context.getServiceReference(this.seatSensorMonitorClassName);
-    	
+
     	if (monitorServiceReference == null)
     	{
     		return;
     	}
-    
+
         ISeatStatusMonitor monitor = (ISeatStatusMonitor) this.context.getService(monitorServiceReference);
 
-        if (monitor == null) {
-            return;
+        boolean isOcuppantOnSeat = false;
+
+        if (sensor != null) {
+            isOcuppantOnSeat = sensor.isSeatOccuppied();
         }
 
-        monitor.registerSeatChange(sensor.isSeatOccuppied());
+        monitor.registerSeatChange(isOcuppantOnSeat);
     }
 
     @Override

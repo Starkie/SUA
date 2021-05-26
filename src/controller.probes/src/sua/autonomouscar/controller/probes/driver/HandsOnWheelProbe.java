@@ -27,7 +27,14 @@ public class HandsOnWheelProbe implements IProbe<IHandsOnWheelSensor>, ServiceLi
             return;
         }
 
-        monitor.registerHandsOnWheelChange(sensor.areTheHandsOnTheSteeringWheel());
+        boolean hasHandsOnWheel = false;
+
+        if (sensor != null)
+        {
+            hasHandsOnWheel = sensor.areTheHandsOnTheSteeringWheel();
+        }
+
+        monitor.registerHandsOnWheelChange(hasHandsOnWheel);
     }
 
     @Override

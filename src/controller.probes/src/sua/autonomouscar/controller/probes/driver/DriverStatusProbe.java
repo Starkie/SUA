@@ -9,6 +9,7 @@ import sua.autonomouscar.controller.monitors.driver.IDriverStatusMonitor;
 import sua.autonomouscar.devices.interfaces.IFaceMonitor;
 import sua.autonomouscar.devices.interfaces.IHumanSensors;
 import sua.autonomouscar.infrastructure.OSGiUtils;
+import sua.autonomouscar.interfaces.EFaceStatus;
 
 public class DriverStatusProbe implements IProbe<IFaceMonitor>, ServiceListener{
 	private BundleContext context;
@@ -25,7 +26,14 @@ public class DriverStatusProbe implements IProbe<IFaceMonitor>, ServiceListener{
             return;
         }
 
-        monitor.registerDriverStatusChange(sensor.getFaceStatus());
+        EFaceStatus driverStatus = EFaceStatus.UNKNOWN;
+
+        if (sensor != null)
+        {
+            driverStatus = sensor.getFaceStatus();
+        }
+
+        monitor.registerDriverStatusChange(driverStatus);
     }
 
     @Override
