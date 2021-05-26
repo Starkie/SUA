@@ -14,6 +14,7 @@ import sua.autonomouscar.controller.probes.car.DistanceSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.DrivingServiceProbe;
 import sua.autonomouscar.controller.probes.car.EngineHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.FallbackPlanHealthCheckProbe;
+import sua.autonomouscar.controller.probes.car.HapticDeviceHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.HumanSensorsHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.LineSensorHealthCheckProbe;
 import sua.autonomouscar.controller.probes.car.NotificationServiceHealthCheckProbe;
@@ -35,6 +36,7 @@ import sua.autonomouscar.devices.interfaces.ISeatSensor;
 import sua.autonomouscar.devices.interfaces.ISteering;
 import sua.autonomouscar.driving.interfaces.IDrivingService;
 import sua.autonomouscar.driving.interfaces.IFallbackPlan;
+import sua.autonomouscar.interaction.interfaces.IInteractionMechanism;
 import sua.autonomouscar.interaction.interfaces.INotificationService;
 
 public class Activator implements BundleActivator {
@@ -62,6 +64,7 @@ public class Activator implements BundleActivator {
 	private SeatSensorProbe copilotSeatSensorProbe;
 	private HandsOnWheelProbe handsOnWheelProbe;
 	private DriverStatusProbe driverStatusProbe;
+	private HapticDeviceHealthCheckProbe hapticDeviceHealthCheckProbe;
 
     public void start(BundleContext bundleContext) throws Exception {
         Activator.context = bundleContext;
@@ -227,6 +230,16 @@ public class Activator implements BundleActivator {
 
         String driverStatusProbeListenerFilter = "(objectclass=" + IFaceMonitor.class.getName() + ")";
         context.addServiceListener(this.driverStatusProbe, driverStatusProbeListenerFilter);
+        
+     // Add the Haptic Device Status probe.
+        this.hapticDeviceHealthCheckProbe = new HapticDeviceHealthCheckProbe(context);
+        context.registerService(
+                new String[] { HapticDeviceHealthCheckProbe.class.getName(), IProbe.class.getName() },
+                this.hapticDeviceHealthCheckProbe,
+                null);
+
+        String hapticDeviceHealthCheckProbeListenerFilter = "(objectclass=" + IInteractionMechanism.class.getName() + ")";
+        context.addServiceListener(this.hapticDeviceHealthCheckProbe, hapticDeviceHealthCheckProbeListenerFilter);
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
@@ -280,6 +293,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.driverStatusProbe);
         this.driverStatusProbe = null;
+        
+        context.removeServiceListener(this.hapticDeviceHealthCheckProbe);
+        this.hapticDeviceHealthCheckProbe = null;
 
         Activator.context = null;
     }

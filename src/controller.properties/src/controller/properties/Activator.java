@@ -8,6 +8,7 @@ import sua.autonomouscar.controller.properties.car.CurrentDrivingServiceStatus;
 import sua.autonomouscar.controller.properties.car.DistanceSensorHealthStatus;
 import sua.autonomouscar.controller.properties.car.EngineHealthStatus;
 import sua.autonomouscar.controller.properties.car.FallbackPlanHealthStatus;
+import sua.autonomouscar.controller.properties.car.HapticDeviceHealthStatus;
 import sua.autonomouscar.controller.properties.car.HumanSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.LineSensorsHealthStatus;
 import sua.autonomouscar.controller.properties.car.NotificationServiceHealthStatus;
@@ -69,6 +70,9 @@ public class Activator implements BundleActivator {
     private ServiceRegistration<?> steeringHealthStatusRegistration;
     private FallbackPlanHealthStatus fallbackPlanHealthStatus;
     private ServiceRegistration<?> fallbackPlanHealthStatusRegistration;
+    
+    private HapticDeviceHealthStatus hapticDeviceHealthStatus;
+    private ServiceRegistration<?> hapticDeviceHealthStatusRegistration;
 
 	public void start(BundleContext bundleContext) throws Exception {
 	    Activator.context = bundleContext;
@@ -117,6 +121,9 @@ public class Activator implements BundleActivator {
 
         this.steeringHealthStatus = new SteeringHealthStatus(context);
         this.steeringHealthStatusRegistration = this.steeringHealthStatus.registerKnowledge();
+        
+        this.hapticDeviceHealthStatus = new HapticDeviceHealthStatus(context);
+        this.hapticDeviceHealthStatusRegistration = this.hapticDeviceHealthStatus.registerKnowledge();
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -164,6 +171,9 @@ public class Activator implements BundleActivator {
 
         this.steeringHealthStatusRegistration.unregister();
         this.steeringHealthStatus = null;
+        
+        this.hapticDeviceHealthStatusRegistration.unregister();
+        this.hapticDeviceHealthStatus = null;
 
 		Activator.context = null;
 	}

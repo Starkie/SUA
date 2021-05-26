@@ -11,6 +11,7 @@ import sua.autonomouscar.controller.monitors.car.DistanceSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.DrivingServiceMonitor;
 import sua.autonomouscar.controller.monitors.car.EngineHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.FallBackPlanHealthMonitor;
+import sua.autonomouscar.controller.monitors.car.HapticDeviceHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.HumanSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.LineSensorsHealthMonitor;
 import sua.autonomouscar.controller.monitors.car.NotificationServiceHealthMonitor;
@@ -43,6 +44,7 @@ public class Activator implements BundleActivator {
     private ServiceRegistration<ISeatStatusMonitor> copilotStatusServiceRegistration;
     private ServiceRegistration<IRoadContextMonitor> roadContextServiceRegistration;
     private ServiceRegistration<SteeringHealthMonitor> steeringContextServiceRegistration;
+    private ServiceRegistration<HapticDeviceHealthMonitor> hapticDeviceServiceRegistration;
 
 
 
@@ -121,6 +123,9 @@ public class Activator implements BundleActivator {
 
         SteeringHealthMonitor steeringContextMonitor = new SteeringHealthMonitor(bundleContext);
         this.steeringContextServiceRegistration = context.registerService(SteeringHealthMonitor.class, steeringContextMonitor, null);
+        
+        HapticDeviceHealthMonitor hapticDeviceServiceRegistration = new HapticDeviceHealthMonitor(bundleContext);
+        this.hapticDeviceServiceRegistration = context.registerService(HapticDeviceHealthMonitor.class, hapticDeviceServiceRegistration, null);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -168,6 +173,9 @@ public class Activator implements BundleActivator {
 
 		this.steeringContextServiceRegistration.unregister();
         this.steeringContextServiceRegistration = null;
+        
+        this.hapticDeviceServiceRegistration.unregister();
+        this.hapticDeviceServiceRegistration = null;
 
 		Activator.context = null;
 	}
