@@ -33,6 +33,7 @@ import sua.autonomouscar.controller.rules.configuration.ReplaceFrontDistanceSens
 import sua.autonomouscar.controller.rules.configuration.ReplaceLeftDistanceSensorRule;
 import sua.autonomouscar.controller.rules.configuration.ReplaceRearDistanceSensorRule;
 import sua.autonomouscar.controller.rules.configuration.ReplaceRightDistanceSensorRule;
+import sua.autonomouscar.controller.rules.notification.steeringwheel.DisableSteeringWheelHapticVibrationRule;
 import sua.autonomouscar.controller.rules.notification.steeringwheel.EnableSteeringWheelHapticVibrationRule;
 import sua.autonomouscar.infrastructure.devices.Steering;
 
@@ -67,6 +68,7 @@ public class Activator implements BundleActivator {
     private SwitchToL2LaneKeepingAssistFromL2 switchToL2LaneKeepingAssistFromL2Rule;
     private SwitchToL2AdaptiveCruiseControlFromL2Rule switchToL2AdaptiveCruiseControlFromL2Rule;
 	private EnableSteeringWheelHapticVibrationRule enableSteeringWheelHapticVibrationRule;
+	private DisableSteeringWheelHapticVibrationRule disableSteeringWheelHapticVibrationRule;
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -162,6 +164,9 @@ public class Activator implements BundleActivator {
 
         this.enableSteeringWheelHapticVibrationRule = new EnableSteeringWheelHapticVibrationRule(bundleContext);
         context.addServiceListener(this.enableSteeringWheelHapticVibrationRule, steeringWheelHapticVibrationFilter);
+
+        this.disableSteeringWheelHapticVibrationRule = new DisableSteeringWheelHapticVibrationRule(bundleContext);
+        context.addServiceListener(this.disableSteeringWheelHapticVibrationRule, steeringWheelHapticVibrationFilter);
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -233,6 +238,9 @@ public class Activator implements BundleActivator {
 
         context.removeServiceListener(this.enableSteeringWheelHapticVibrationRule);
         this.enableSteeringWheelHapticVibrationRule = null;
+
+        context.removeServiceListener(this.disableSteeringWheelHapticVibrationRule);
+        this.disableSteeringWheelHapticVibrationRule = null;
 
 		Activator.context = null;
 	}
